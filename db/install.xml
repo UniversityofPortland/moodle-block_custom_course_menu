@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/my_courses/db" VERSION="20080903" COMMENT="XMLDB file for Moodle my_courses block"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_my_courses" COMMENT="Track collapsed/expanded status for a category per user." NEXT="block_my_courses_meta">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="categoryid"/>
+        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="userid" NEXT="collapsed"/>
+        <FIELD NAME="collapsed" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" PREVIOUS="categoryid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="usercat" UNIQUE="true" FIELDS="userid, categoryid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="block_my_courses_meta" COMMENT="The table containing hide, and sortorder info per user per course / category" PREVIOUS="block_my_courses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="item"/>
+        <FIELD NAME="item" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="category" SEQUENCE="false" PREVIOUS="userid" NEXT="itemid"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="item" NEXT="hide"/>
+        <FIELD NAME="hide" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="itemid" NEXT="sortorder"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="hide"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="useiteitemid" UNIQUE="true" FIELDS="userid, item, itemid" NEXT="useritem"/>
+        <INDEX NAME="useritem" UNIQUE="false" FIELDS="userid, item" PREVIOUS="useiteitemid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
