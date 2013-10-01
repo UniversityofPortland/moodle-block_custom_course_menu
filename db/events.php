@@ -2,7 +2,7 @@
 
 $mapper = function($event) {
     return array(
-        'handlerfile' => '/blocks/my_courses/handler.php',
+        'handlerfile' => '/blocks/my_courses_menu/handler.php',
         'handlerfunction' => array('my_courses_handler', $event),
         'schedule' => 'instant',
     );
