@@ -25,3 +25,5 @@ run the _Notifications_ admin link.
 2. Hide courses and cateogires by clicking the **eye icon** next to them. When a course or category has its eye shut and is ~~strikethrough~~ it is hidden.
 3. Sort courses and categories by **dragging them** into the order you would like.
 4. After you are finished customizing your course menu, click the **gear icon** once again to save your changes and turn editing mode off.
+
+*Developed by the University of Portland*
