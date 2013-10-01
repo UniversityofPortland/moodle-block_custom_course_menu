@@ -5,7 +5,7 @@
 $string['pluginname'] = 'My Courses Menu';
 $string['course'] = 'Course';
 
-$string['my_courses_menu:addinstance'] = 'The ability to add on Site page';
-$string['my_courses_menu:myaddinstance'] = 'The ability to add on the My page';
+$string['my_courses:addinstance'] = 'The ability to add on Site page';
+$string['my_courses:myaddinstance'] = 'The ability to add on the My page';
 
 ?>
