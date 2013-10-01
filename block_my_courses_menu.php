@@ -1,6 +1,6 @@
 <?php
 
-class block_my_courses extends block_base {
+class block_my_courses_menu extends block_base {
     function init() {
         $this->title = get_string('pluginname', 'block_my_courses_menu');
     }
