@@ -2,7 +2,7 @@
 
 class block_my_courses extends block_base {
     function init() {
-        $this->title = get_string('pluginname', 'block_my_courses');
+        $this->title = get_string('pluginname', 'block_my_courses_menu');
     }
 
     function get_content() {
