@@ -1,7 +1,7 @@
 <?php
 
 $capabilities = array(
-    'block/my_courses:myaddinstance' => array(
+    'block/my_courses_menu:myaddinstance' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
@@ -9,7 +9,7 @@ $capabilities = array(
         )
     ),
 
-    'block/my_courses:addinstance' => array(
+    'block/my_courses_menu:addinstance' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
