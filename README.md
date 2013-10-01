@@ -15,5 +15,5 @@ students and teachers.
 
 ## Installation
 
-Simply move the `my_courses` folder into your blocks directory, and
+Simply rename the `moodle-block_my_courses` to `my_courses`, move the folder into your blocks directory, and
 run the _Notifications_ admin link.
