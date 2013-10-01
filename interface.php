@@ -183,7 +183,7 @@ function get_category_tree() {
 
     foreach ($categories as $category) {
         uasort($category->courses, function($coursea, $courseb) {
-            if (isset($coursea->meta->sortorder) && isset($catb->meta->sortorder)) {
+            if (isset($coursea->meta->sortorder) && isset($courseb->meta->sortorder)) {
                 return $coursea->meta->sortorder < $courseb->meta->sortorder ? -1 : 1;
             } else if (isset($coursea->meta->sortorder)) {
                 return -1;
