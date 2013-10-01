@@ -17,5 +17,6 @@
 
 $plugin->version = 2013050814;
 $plugin->requires  = 2011070100; // Requires Moodle 2.1.
+$plugin->component = 'My Courses Menu';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.0';
