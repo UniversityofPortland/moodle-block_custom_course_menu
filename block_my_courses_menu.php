@@ -12,9 +12,9 @@ class block_my_courses_menu extends block_base {
             return $this->content;
         }
 
-        $PAGE->requires->js('/blocks/my_courses/js/jquery-1.9.1.min.js');
-        $PAGE->requires->js('/blocks/my_courses/js/ui/js/jquery-ui-1.10.3.min.js');
-        $PAGE->requires->js('/blocks/my_courses/js/courses.js');
+        $PAGE->requires->js('/blocks/my_courses_menu/js/jquery-1.9.1.min.js');
+        $PAGE->requires->js('/blocks/my_courses_menu/js/ui/js/jquery-ui-1.10.3.min.js');
+        $PAGE->requires->js('/blocks/my_courses_menu/js/courses.js');
 
         $this->content = new stdClass;
         $this->content->footer = '&nbsp;';
@@ -28,7 +28,7 @@ class block_my_courses_menu extends block_base {
         }
 
         $edit_icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
-        $interface = new moodle_url('/blocks/my_courses/interface.php');
+        $interface = new moodle_url('/blocks/my_courses_menu/interface.php');
         $html = '<div id="my_courses_application">'
               . '<div id="my_courses_dynamic">'
               . '<span class="interface">Loading...</span>'
