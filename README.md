@@ -9,6 +9,8 @@ students and teachers.
 - Intuitive controls
 - Manually hide courses or categories from the list
 - Customize sort order of courses and categories
+- Expand/collapse course categories
+- Site administrators get an *All courses...* link
 
 ## Requirements
 
