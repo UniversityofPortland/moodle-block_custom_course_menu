@@ -16,6 +16,11 @@ $visible_icon = $OUTPUT->pix_icon('t/hide', get_string('hide'));
 
 $categories = get_category_tree();
 
+if(!empty($CFG->block_my_courses_enablelastviewed)) {
+    $lastviewed = get_last_viewed();
+    $categories = array_merge($lastviewed,$categories);
+}
+
 if (empty($categories)) {
     echo "You are not enrolled in any courses.";
     die();
@@ -193,6 +198,52 @@ function get_category_tree() {
                 return $coursea->sortorder < $courseb->sortorder ? -1 : 1;
             }
         });
+    }
+
+    return $categories;
+}
+
+/**
+ * Helper method to pull get last courses viewed
+ *
+ * @return array
+ */
+function get_last_viewed() {
+    global $CFG,$DB,$USER;
+
+    $category_meta = get_meta_for('category');
+    $course_meta = get_meta_for('course');
+    $courses = $DB->get_records_sql("SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON a.course = b.course AND a.time = b.time ORDER BY b.time DESC LIMIT $CFG->block_my_courses_lastviewedamount");
+
+    $categories = array();
+    foreach ($courses as $course) {
+        if (!isset($categories["lastviewed"])) {
+            $params = array('id' => "lastviewed");
+            $category =  new stdClass();
+            $category->name = "Last $CFG->block_my_courses_lastviewedamount Viewed";
+            $category->id = "lastviewed";
+            $category->courses = array();
+
+            if (isset($category_meta["lastviewed"])) {
+                $meta = $category_meta["lastviewed"];
+                unset($meta->sortorder);
+                $category->meta = $meta;
+            } else {
+                $category->meta = (object) array('hide' => 0);
+            }
+
+            $categories["lastviewed"] = $category;
+        }
+
+        if (isset($course_meta[$course->id])) {
+            $meta = $course_meta[$course->id];
+            unset($meta->sortorder);
+            $course->meta = $meta;
+        } else {
+            $course->meta = (object) array('hide' => 0);
+        }
+
+        $categories["lastviewed"]->courses[$course->id] = $course;
     }
 
     return $categories;
