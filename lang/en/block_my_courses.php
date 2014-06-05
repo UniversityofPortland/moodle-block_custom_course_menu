@@ -8,4 +8,8 @@ $string['course'] = 'Course';
 $string['my_courses:addinstance'] = 'The ability to add on Site page';
 $string['my_courses:myaddinstance'] = 'The ability to add on the My page';
 
+$string['enablelastviewed'] = 'Show last viewed courses';
+$string['configenablelastviewed'] = 'Adds a section that displays the last courses the user has visited.';
+$string['lastviewedamount'] = 'Last viewed amount';
+$string['configlastviewedamount'] = 'Adjusts the amount of courses that will be displayed in the last viewed area.';
 ?>
