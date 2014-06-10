@@ -4,7 +4,7 @@ $(function() {
 
   var saveSortsFor = function(type, $ul) {
     var url = $('#my_courses_sort').text();
-    var regex = new RegExp(type + "id=(\\d+)");
+    var regex = new RegExp(type + "id=([\\w-]{1,25})");
 
     var ids = [];
     var sortorder = [];
@@ -95,7 +95,32 @@ $(function() {
 
     return false;
   };
+  
+  var itemFavorite = function() {
+    var $this = $(this);
+    var fav = $this.hasClass('favoff');
 
+    if (fav) {
+      var toAdd = 'favon';
+      var toRemove = 'favoff';
+    } else {
+      var toAdd = 'favoff';
+      var toRemove = 'favon';
+    }
+
+    $this.removeClass(toRemove).addClass(toAdd);
+    $this.html($('#my_courses_' + toAdd).html());
+    $("a[href*='" + $this.attr('href') + "']").removeClass(toRemove).addClass(toAdd);
+    $("a[href*='" + $this.attr('href') + "']").html($('#my_courses_' + toAdd).html());
+    
+    $.ajax({
+      url: $this.attr('href'),
+      type: "POST",
+    });
+
+    return false;
+  };
+  
   var createInterface = function(editing) {
     $.ajax({
       url: interfaceUrl,
@@ -111,6 +136,7 @@ $(function() {
 
       $('.course-sortable').sortable(sortableObject);
       $('.category_switcher').click(categorySwitcher);
+      $('.item_favorite').click(itemFavorite);
       $('.item_visibility').click(itemVisibility);
     });
   };

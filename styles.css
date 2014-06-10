@@ -12,6 +12,10 @@
   cursor: move;
 }
 
+.excluded_courses {
+  cursor: default !important;
+}
+
 .block_my_courses ul.course-sortable .placeholder {
   border: 1px dashed #cdcdcd;
   height: 1.3em;

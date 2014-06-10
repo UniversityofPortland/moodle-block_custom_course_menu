@@ -39,15 +39,16 @@ class block_my_courses extends block_base {
         }
 
         $courses = enrol_get_my_courses();
-        $hidelink = empty($courses) ? array("style" => "display:none") : array("style" => "display:inline");
+        $hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display:inline");
         
         $edit_icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
         $interface = new moodle_url('/blocks/my_courses/interface.php');
-        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink)); 
-
+        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink));        
         $this->content->text = $html;
 
         return $this->content;
     }
+    
+    function has_config() {return true;}
 }
 ?>

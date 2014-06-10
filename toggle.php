@@ -6,7 +6,7 @@ if (!isloggedin()) {
     die();
 }
 
-$catid = required_param('categoryid', PARAM_INT);
+$catid = required_param('categoryid', PARAM_NOTAGS);
 $userid = required_param('userid', PARAM_INT);
 
 $params = array(
