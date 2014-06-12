@@ -65,7 +65,7 @@ foreach ($categories as $category) {
         'class' => "category_switcher $switch",
     ));
 
-    $hide = '';
+    $hide = $move = '';
     $hidden_switch = '';
 
     if ($editing) {
