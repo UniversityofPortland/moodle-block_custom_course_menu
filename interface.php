@@ -69,6 +69,9 @@ foreach ($categories as $category) {
     $hidden_switch = '';
 
     if ($editing) {
+        $move = html_writer::tag('span', $OUTPUT->pix_icon('i/move_2d', 'Drag and Drop to sort') . " ", array(
+            'class' => "handle",
+        ));
         $hidden_switch = !empty($category->meta->hide) ? 'inconspicuous' : 'visible';
         $switch_icon = ${$hidden_switch . '_icon'};
 
@@ -79,7 +82,7 @@ foreach ($categories as $category) {
         $hide .= ' ';
     }
     
-    $html .= "<li class='my_courses_category $hidden_switch'>$hide$anchor {$category->name}";
+    $html .= "<li class='my_courses_category $hidden_switch'>$move$anchor {$category->name} $hide";
     $html .= '<ul class="my_courses_list ' . $hidden_switch . ' ' . $collapsed_css . $sortable_css . '">';
     foreach ($category->courses as $course) {
         if (!$editing && $course->meta->hide) {
@@ -130,8 +133,8 @@ foreach ($categories as $category) {
 
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
         $anchor = html_writer::link($url, $course->fullname, array('class' => $class));
-
-        $content = "$hide$course_icon $anchor $fav";
+        $move = $category->id === "lastviewed" || $category->id === "favs" ? "" : $move;
+        $content = "$move$course_icon $anchor $hide $fav";
         $html .= html_writer::tag('li', $content, array(
             'class' => "my_courses_course $hidden_switch",
         ));

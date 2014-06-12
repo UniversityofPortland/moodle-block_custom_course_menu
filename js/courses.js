@@ -30,6 +30,7 @@ $(function() {
 
   var sortableObject = {
     cursor: "move",
+    handle: ".handle",
     axis: "y",
     placeholder: "placeholder",
     update: function(event, $ui) {
@@ -98,24 +99,13 @@ $(function() {
   
   var itemFavorite = function() {
     var $this = $(this);
-    var fav = $this.hasClass('favoff');
 
-    if (fav) {
-      var toAdd = 'favon';
-      var toRemove = 'favoff';
-    } else {
-      var toAdd = 'favoff';
-      var toRemove = 'favon';
-    }
-
-    $this.removeClass(toRemove).addClass(toAdd);
-    $this.html($('#my_courses_' + toAdd).html());
-    $("a[href*='" + $this.attr('href') + "']").removeClass(toRemove).addClass(toAdd);
-    $("a[href*='" + $this.attr('href') + "']").html($('#my_courses_' + toAdd).html());
-    
     $.ajax({
       url: $this.attr('href'),
       type: "POST",
+    }).done(function() {
+        //refresh editing area
+        createInterface(true);
     });
 
     return false;

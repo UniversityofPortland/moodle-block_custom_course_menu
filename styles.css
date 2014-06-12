@@ -8,7 +8,7 @@
   list-style: none;
 }
 
-.block_my_courses ul.course-sortable {
+.handle {
   cursor: move;
 }
 
