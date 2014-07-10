@@ -4,7 +4,7 @@ $(function() {
 
   var saveSortsFor = function(type, $ul) {
     var url = $('#my_courses_sort').text();
-    var regex = new RegExp(type + "id=(\\d+)");
+    var regex = new RegExp(type + "id=([\\w-]{1,25})");
 
     var ids = [];
     var sortorder = [];
@@ -30,6 +30,7 @@ $(function() {
 
   var sortableObject = {
     cursor: "move",
+    handle: ".handle",
     axis: "y",
     placeholder: "placeholder",
     update: function(event, $ui) {
@@ -95,7 +96,21 @@ $(function() {
 
     return false;
   };
+  
+  var itemFavorite = function() {
+    var $this = $(this);
 
+    $.ajax({
+      url: $this.attr('href'),
+      type: "POST",
+    }).done(function() {
+        //refresh editing area
+        createInterface(true);
+    });
+
+    return false;
+  };
+  
   var createInterface = function(editing) {
     $.ajax({
       url: interfaceUrl,
@@ -111,6 +126,7 @@ $(function() {
 
       $('.course-sortable').sortable(sortableObject);
       $('.category_switcher').click(categorySwitcher);
+      $('.item_favorite').click(itemFavorite);
       $('.item_visibility').click(itemVisibility);
     });
   };

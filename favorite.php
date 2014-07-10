@@ -10,17 +10,12 @@ $userid = required_param('userid', PARAM_INT);
 $courseid = optional_param('courseid', null, PARAM_INT);
 $categoryid = optional_param('categoryid', null, PARAM_NOTAGS);
 
-if (empty($courseid) && empty($categoryid)) {
+if ((empty($courseid) && empty($categoryid)) || empty($userid)) {
     die();
 }
 
-if ($categoryid) {
-    $itemid = $categoryid;
-    $item = 'category';
-} else {
-    $itemid = $courseid;
-    $item = 'course';
-}
+$itemid = $courseid;
+$item = 'course';
 
 $params = array(
     'userid' => $userid,
@@ -31,11 +26,10 @@ $params = array(
 $entry = $DB->get_record('block_my_courses_meta', $params);
 
 if ($entry) {
-  $entry->hide = $entry->hide ? 0 : 1;
+  $entry->fav = $entry->fav ? 0 : 1;
   $DB->update_record('block_my_courses_meta', $entry);
 } else {
   $entry = (object) $params;
-  $entry->hide = 1;
-
+  $entry->fav = 1;
   $DB->insert_record('block_my_courses_meta', $entry);
 }
