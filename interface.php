@@ -81,9 +81,9 @@ foreach ($categories as $category) {
         ));
         $hide .= ' ';
     }
-    
+
     $html .= "<li class='my_courses_category $hidden_switch'>$move$anchor {$category->name} $hide";
-    $html .= '<ul class="my_courses_list ' . $hidden_switch . ' ' . $collapsed_css . $sortable_css . '">';
+    $html .= '<ul class="my_courses_list ' . $hidden_switch . ' ' . $collapsed_css . ($category->id === 'favs' || $category->id === 'lastviewed' ? '' : $sortable_css) . '">';
     foreach ($category->courses as $course) {
         if (!$editing && $course->meta->hide) {
             continue;
@@ -105,26 +105,26 @@ foreach ($categories as $category) {
                 'class' => "item_visibility $hidden_switch",
             ));
             $hide .= ' ';
-            
+
             $url = new moodle_url('/blocks/my_courses/favorite.php', array(
                 'userid' => $USER->id,
                 'courseid' => $course->id,
             ));
-            
+
             if (!empty($CFG->block_my_courses_enablefavorites)) {
                 $fav_switch = empty($course->meta->fav) ? 'favon' : 'favoff';
                 $switch_icon = ${$fav_switch . '_icon'};
-    
+
                 $fav = html_writer::link($url, $switch_icon, array(
                     'class' => "item_favorite $fav_switch",
-                ));    
+                ));
             }
-            
+
             if ($category->id === 'lastviewed') {
                 $hide = $fav = '';
                 $hidden_switch = 'excluded_courses';
             }
-            
+
             if ($category->id === 'favs') {
                 $hide = '';
                 $hidden_switch = 'excluded_courses';
@@ -169,11 +169,11 @@ $html .= '</ul>'
       html_writer::tag('span', $url->out(), array(
           'id' => 'my_courses_sort',
           'style' => 'display: none;',
-      )) . 
+      )) .
       html_writer::tag('span', $favon_icon, array(
           'id' => 'my_courses_favon',
           'style' => 'display: none;',
-      )) . 
+      )) .
       html_writer::tag('span', $favoff_icon, array(
           'id' => 'my_courses_favoff',
           'style' => 'display: none;',
@@ -248,7 +248,7 @@ function sort_my_categories($categories) {
             }
         });
     }
-    
+
     return $categories;
 }
 
