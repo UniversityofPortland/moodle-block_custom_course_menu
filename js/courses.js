@@ -96,7 +96,7 @@ $(function() {
 
     return false;
   };
-  
+
   var itemFavorite = function() {
     var $this = $(this);
 
@@ -110,7 +110,7 @@ $(function() {
 
     return false;
   };
-  
+
   var createInterface = function(editing) {
     $.ajax({
       url: interfaceUrl,
@@ -120,8 +120,16 @@ $(function() {
 
       if (editing) {
         $container.addClass('editing');
+        $('#overtext').html('Finish Editing ');
       } else {
         $container.removeClass('editing');
+        $('#overtext').html('Start Editing ');
+      }
+
+      if (html == 'You are not enrolled in any courses.') {
+        $('#my_courses_interface').hide();
+      } else {
+        $('#my_courses_interface').show();
       }
 
       $('.course-sortable').sortable(sortableObject);
