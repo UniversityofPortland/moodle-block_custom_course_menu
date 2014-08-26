@@ -32,7 +32,7 @@ class block_my_courses extends block_base {
               . '<span class="interface">Loading...</span>'
               . '</div></div>';
 
-        if (is_siteadmin($USER->id))  {
+        if (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)) {
             $url = new moodle_url('/course/index.php');
             $link = html_writer::link($url, get_string('fulllistofcourses') . '...');
             $this->content->footer = $link;
