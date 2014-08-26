@@ -32,7 +32,7 @@ class block_my_courses extends block_base {
               . '<span class="interface">Loading...</span>'
               . '</div></div>';
 
-        if (is_siteadmin($USER->id))  {
+        if (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)) {
             $url = new moodle_url('/course/index.php');
             $link = html_writer::link($url, get_string('fulllistofcourses') . '...');
             $this->content->footer = $link;
@@ -40,15 +40,15 @@ class block_my_courses extends block_base {
 
         $courses = enrol_get_my_courses();
         $hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display:inline");
-        
+
         $edit_icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
         $interface = new moodle_url('/blocks/my_courses/interface.php');
-        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink));        
+        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink));
         $this->content->text = $html;
 
         return $this->content;
     }
-    
+
     function has_config() {return true;}
 }
 ?>
