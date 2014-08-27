@@ -81,7 +81,7 @@ foreach ($categories as $category) {
         ));
         $hide .= ' ';
     }
-    
+
     $html .= "<li class='my_courses_category $hidden_switch'>$move$anchor {$category->name} $hide";
     $html .= '<ul class="my_courses_list ' . $hidden_switch . ' ' . $collapsed_css . $sortable_css . '">';
     foreach ($category->courses as $course) {
@@ -105,26 +105,26 @@ foreach ($categories as $category) {
                 'class' => "item_visibility $hidden_switch",
             ));
             $hide .= ' ';
-            
+
             $url = new moodle_url('/blocks/my_courses/favorite.php', array(
                 'userid' => $USER->id,
                 'courseid' => $course->id,
             ));
-            
+
             if (!empty($CFG->block_my_courses_enablefavorites)) {
                 $fav_switch = empty($course->meta->fav) ? 'favon' : 'favoff';
                 $switch_icon = ${$fav_switch . '_icon'};
-    
+
                 $fav = html_writer::link($url, $switch_icon, array(
                     'class' => "item_favorite $fav_switch",
-                ));    
+                ));
             }
-            
+
             if ($category->id === 'lastviewed') {
                 $hide = $fav = '';
                 $hidden_switch = 'excluded_courses';
             }
-            
+
             if ($category->id === 'favs') {
                 $hide = '';
                 $hidden_switch = 'excluded_courses';
@@ -169,11 +169,11 @@ $html .= '</ul>'
       html_writer::tag('span', $url->out(), array(
           'id' => 'my_courses_sort',
           'style' => 'display: none;',
-      )) . 
+      )) .
       html_writer::tag('span', $favon_icon, array(
           'id' => 'my_courses_favon',
           'style' => 'display: none;',
-      )) . 
+      )) .
       html_writer::tag('span', $favoff_icon, array(
           'id' => 'my_courses_favoff',
           'style' => 'display: none;',
@@ -248,7 +248,7 @@ function sort_my_categories($categories) {
             }
         });
     }
-    
+
     return $categories;
 }
 
@@ -262,7 +262,13 @@ function get_last_viewed() {
 
     $category_meta = get_meta_for('category');
     $course_meta = get_meta_for('course');
-    $sql = "SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $CFG->block_my_courses_lastviewedamount";
+
+    if ($CFG->version < 2014051200) { // Moodle < 2.7
+        $sql = "SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $CFG->block_my_courses_lastviewedamount";
+    } else { // Moodle 2.7+
+        $sql = "SELECT * FROM {logstore_standard_log} a INNER JOIN (SELECT c.*,l.courseid, MAX(l.timecreated) as time FROM {logstore_standard_log} l JOIN {course} c ON c.id=l.courseid WHERE l.userid='$USER->id' AND l.courseid != 1 AND l.target='course' GROUP BY l.courseid) b ON a.courseid = b.courseid AND a.timecreated = b.time GROUP BY a.courseid ORDER BY b.time DESC LIMIT $CFG->block_my_courses_lastviewedamount";
+    }
+
     $courses = $DB->get_records_sql($sql);
 
     $categories = array();
