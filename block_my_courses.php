@@ -34,21 +34,22 @@ class block_my_courses extends block_base {
 
         if (is_siteadmin($USER->id))  {
             $url = new moodle_url('/course/index.php');
-            $link = html_writer::link($url, get_string('fulllistofcourses') . '...');
+            $link = html_writer::link($url, html_writer::tag('div', get_string('fulllistofcourses') . '...', array("style" => "text-align:center;")));
             $this->content->footer = $link;
         }
 
         $courses = enrol_get_my_courses();
         $hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display:inline");
-        
+
         $edit_icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
         $interface = new moodle_url('/blocks/my_courses/interface.php');
-        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink));        
+        $this->content->footer .= html_writer::link($interface, html_writer::tag('span', 'Start Editing ', array("id" => "overtext", "style" => "display:none;")) . $edit_icon, array_merge(array('id' => 'my_courses_interface','onmouseover' => "$('#overtext').show()", 'onmouseout' => "$('#overtext').hide()"), $hidelink));
+        $this->content->footer .= html_writer::tag('div', '', array("style" => "clear:both;"));
         $this->content->text = $html;
 
         return $this->content;
     }
-    
+
     function has_config() {return true;}
 }
 ?>
