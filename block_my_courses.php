@@ -32,24 +32,27 @@ class block_my_courses extends block_base {
               . '<span class="interface">Loading...</span>'
               . '</div></div>';
 
-        if (is_siteadmin($USER->id))  {
+        $footer = "";
+        if (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)) {
             $url = new moodle_url('/course/index.php');
-            $link = html_writer::link($url, get_string('fulllistofcourses') . '...');
+            $footer .= html_writer::link($url, html_writer::tag('div', get_string('fulllistofcourses') . '...', array("style" => "text-align:center;")));
+        }
 
+        if(!empty($CFG->block_my_courses_showsearch)) {
             $strsearchcourses= get_string("search");
             $searchurl = new moodle_url('/course/search.php');
 
-            $link   .= html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get', 'style' => 'text-align:center'));
-            $link   .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset'));
-            $link   .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid,
+            $footer   .= html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get', 'style' => 'text-align:center'));
+            $footer   .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset'));
+            $footer   .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid,
                                               'size' => $inputsize, 'name' => 'search', 'value' => s($value)));
-            $link   .= html_writer::empty_tag('input', array('type' => 'submit',
+            $footer   .= html_writer::empty_tag('input', array('type' => 'submit',
                                               'value' => $strsearchcourses));
-            $link   .= html_writer::end_tag('fieldset');
-            $link   .= html_writer::end_tag('form');
-
-            $this->content->footer = $link;
+            $footer   .= html_writer::end_tag('fieldset');
+            $footer   .= html_writer::end_tag('form');
         }
+
+        $this->content->footer = $footer;
 
         $courses = enrol_get_my_courses();
         $hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display:inline");

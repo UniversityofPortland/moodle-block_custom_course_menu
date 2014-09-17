@@ -9,4 +9,6 @@ if ($ADMIN->fulltree) {
                        get_string('configenablelastviewed', 'block_my_courses'), 0));
     $settings->add(new admin_setting_configtext('block_my_courses_lastviewedamount', get_string('lastviewedamount', 'block_my_courses'),
                        get_string('configlastviewedamount', 'block_my_courses'), 5, PARAM_INT));
+    $settings->add(new admin_setting_configcheckbox('block_my_courses_showsearch', get_string('showsearch', 'block_my_courses'),
+                       get_string('configshowsearch', 'block_my_courses'), 0));
 }

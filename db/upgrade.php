@@ -52,36 +52,39 @@ function xmldb_block_my_courses_upgrade($oldversion) {
         if ($dbman->index_exists($table, $index)) {
             $dbman->drop_index($table, $index);
         }
-        
+
         // Change field categoryid
         $dbman->change_field_type($table, $field);
-        
+
         // Recreate index
         $dbman->add_index($table,$index);
-                
-        $table = new xmldb_table('block_my_courses_meta');       
+
+        $table = new xmldb_table('block_my_courses_meta');
         $index = new xmldb_index('useiteitemid', XMLDB_INDEX_UNIQUE, array('userid', 'item', 'itemid'));
         $field = new xmldb_field('itemid', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, '0', 'item');
-        
+
         // Conditionally launch drop index.
         if ($dbman->index_exists($table, $index)) {
             $dbman->drop_index($table, $index);
         }
-               
+
         $dbman->change_field_type($table, $field);
-        
+
         // Recreate index
         $dbman->add_index($table,$index);
-        
+
         // Adding fields to table block_my_courses_meta.
         $field = new xmldb_field('fav', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
-        
+
         // Conditionally launch add field fav
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table,$field);
         }
-        
+
         // My_courses savepoint reached.
         upgrade_block_savepoint(true, 2014060900, 'my_courses');
+    } else if ($oldversion < 2014060901) {
+        // My_courses savepoint reached.
+        upgrade_block_savepoint(true, 2014060901, 'my_courses');
     }
 }

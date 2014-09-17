@@ -1,6 +1,6 @@
 <?php
-// $Id: block_my_courses.php,v 1.2 2008-09-03 09:44:03 moodler Exp $ 
-// block_my_courses.php 
+// $Id: block_my_courses.php,v 1.2 2008-09-03 09:44:03 moodler Exp $
+// block_my_courses.php
 
 $string['pluginname'] = 'My Courses Menu';
 $string['course'] = 'Course';
@@ -14,4 +14,6 @@ $string['lastviewedamount'] = 'Last viewed amount';
 $string['configlastviewedamount'] = 'Adjusts the amount of courses that will be displayed in the last viewed area.';
 $string['enablefavorites'] = 'Enable the Favorites section';
 $string['configenablefavorites'] = 'Adds a section that displays the users selected favorites.';
+$string['showsearch'] = 'Show course search';
+$string['configshowsearch'] = 'Adds a course search box to the bottom of the menu.';
 ?>
