@@ -35,20 +35,33 @@ class block_my_courses extends block_base {
         if (is_siteadmin($USER->id))  {
             $url = new moodle_url('/course/index.php');
             $link = html_writer::link($url, get_string('fulllistofcourses') . '...');
+
+            $strsearchcourses= get_string("search");
+            $searchurl = new moodle_url('/course/search.php');
+
+            $link   .= html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get', 'style' => 'text-align:center'));
+            $link   .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox invisiblefieldset'));
+            $link   .= html_writer::empty_tag('input', array('type' => 'text', 'id' => $inputid,
+                                              'size' => $inputsize, 'name' => 'search', 'value' => s($value)));
+            $link   .= html_writer::empty_tag('input', array('type' => 'submit',
+                                              'value' => $strsearchcourses));
+            $link   .= html_writer::end_tag('fieldset');
+            $link   .= html_writer::end_tag('form');
+
             $this->content->footer = $link;
         }
 
         $courses = enrol_get_my_courses();
         $hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display:inline");
-        
+
         $edit_icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
         $interface = new moodle_url('/blocks/my_courses/interface.php');
-        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink));        
+        $this->content->footer .= html_writer::link($interface, $edit_icon, array_merge(array('id' => 'my_courses_interface'), $hidelink));
         $this->content->text = $html;
 
         return $this->content;
     }
-    
+
     function has_config() {return true;}
 }
 ?>
