@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$plugin->version = 2014060900;
+$plugin->version = 2014060901;
 $plugin->requires  = 2011070100; // Requires Moodle 2.1.
 $plugin->component = 'block_my_courses';
 $plugin->maturity  = MATURITY_STABLE;
