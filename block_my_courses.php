@@ -33,13 +33,23 @@ class block_my_courses extends block_base {
     		. '</div></div>';
 
     	$footer = "";
+	$formid = null;
+	$inputid = null;
+	$inputsize = null;
+	$value = null;
+
     	if (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)) {
     		$url = new moodle_url('/course/index.php');
     		$footer .= html_writer::link($url, html_writer::tag('div', get_string('fulllistofcourses') . '...', array("style" => "text-align:center;")));
     	}
 
     	if(!empty($CFG->block_my_courses_showsearch)) {
-    		$strsearchcourses= get_string("search");
+    		$formid = null;
+	        $inputid = null;
+	        $inputsize = null;
+	        $value = null;
+
+		$strsearchcourses= get_string("search");
     		$searchurl = new moodle_url('/course/search.php');
 
     		$footer .= html_writer::start_tag('form', array('id' => $formid, 'action' => $searchurl, 'method' => 'get', 'style' => 'text-align:center'));
