@@ -1,5 +1,6 @@
 .block_my_courses #my_courses_interface {
   float: right;
+  margin: -12px -4px;
 }
 
 .block_my_courses ul.my_courses_category_list {
