@@ -65,7 +65,7 @@ class block_my_courses extends block_base {
     	$this->content->footer = $footer;
 
     	$courses = enrol_get_my_courses();
-    	$hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display:inline");
+    	$hidelink = empty($courses) && empty($CFG->block_my_courses_enablelastviewed) ? array("style" => "display:none") : array("style" => "display: inline;");
 
     	$edit_icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
     	$interface = new moodle_url('/blocks/my_courses/interface.php');
