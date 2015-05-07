@@ -12,10 +12,13 @@ class block_my_courses extends block_base {
     		return $this->content;
     	}
 
-    	$PAGE->requires->js('/blocks/my_courses/js/jquery-1.9.1.min.js');
-    	$PAGE->requires->js('/blocks/my_courses/js/ui/js/jquery-ui-1.10.3.min.js');
-    	$PAGE->requires->js('/blocks/my_courses/js/courses.js');
-
+        if ($CFG->version < 20150500) { // If not using Moodle 2.9+ use the requirejs version
+            $PAGE->requires->js('/blocks/my_courses/js/jquery-1.9.1.min.js');
+        	$PAGE->requires->js('/blocks/my_courses/js/ui/js/jquery-ui-1.10.3.min.js');
+            $PAGE->requires->js('/blocks/my_courses/js/courses.js');    	
+        } else { // If using Moodle 2.9+ use the requirejs version and built in jQuery and UI
+            $PAGE->requires->js('/blocks/my_courses/js/require_courses.js');    
+        }
     	$this->content = new stdClass;
     	$this->content->footer = '&nbsp;';
 
