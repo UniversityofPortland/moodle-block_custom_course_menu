@@ -1,4 +1,11 @@
-$(function() {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		require(["jquery", "jqueryui"], factory );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
   var interfaceUrl = $('#my_courses_interface').attr('href');
   var $container = $('#my_courses_dynamic');
 
@@ -120,10 +127,8 @@ $(function() {
 
       if (editing) {
         $container.addClass('editing');
-        $('#overtext').html('Finish Editing ');
       } else {
         $container.removeClass('editing');
-        $('#overtext').html('Start Editing ');
       }
 
       if (html == 'You are not enrolled in any courses.') {
@@ -147,4 +152,18 @@ $(function() {
     createInterface(!$container.hasClass('editing'));
     return false;
   });
-});
+  
+  $('#my_courses_interface').mouseover(function() {
+    if ($container.hasClass('editing')) {
+      $(this).prepend("<span id='overtext'>Finish Editing </span>");
+    } else {
+      $(this).prepend("<span id='overtext'>Start Editing </span>");
+    }
+    return false;
+  });
+
+  $('#my_courses_interface').mouseout(function() {
+    $('#overtext').remove();
+    return false;
+  });
+}));
