@@ -266,13 +266,15 @@ function get_last_viewed() {
     if ($CFG->version < 2014051200) { // Moodle < 2.7
         $sql = "SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $CFG->block_my_courses_lastviewedamount";
     } else { // Moodle 2.7+
-        $sql = "SELECT * FROM {logstore_standard_log} a INNER JOIN (SELECT c.*,l.courseid, MAX(l.timecreated) as time FROM {logstore_standard_log} l JOIN {course} c ON c.id=l.courseid WHERE l.userid='$USER->id' AND l.courseid != 1 AND l.target='course' GROUP BY l.courseid) b ON a.courseid = b.courseid AND a.timecreated = b.time GROUP BY a.courseid ORDER BY b.time DESC LIMIT $CFG->block_my_courses_lastviewedamount";
+        $sql = "SELECT courseid, max(timecreated) as date FROM {logstore_standard_log} WHERE userid='$USER->id' AND courseid > 1 GROUP BY courseid ORDER BY `date` DESC LIMIT $CFG->block_my_courses_lastviewedamount";
     }
 
-    $courses = $DB->get_records_sql($sql);
+    $latest_courses = $DB->get_records_sql($sql);
 
     $categories = array();
-    foreach ($courses as $course) {
+    $order=1;
+    foreach ($latest_courses as $latest) {
+        $course = $DB->get_record('course', array('id' => $latest->courseid), '*', MUST_EXIST);
         if (!isset($categories["lastviewed"])) {
             $params = array('id' => "lastviewed");
             $category =  new stdClass();
@@ -288,15 +290,8 @@ function get_last_viewed() {
 
             $categories["lastviewed"] = $category;
         }
-
-        if (isset($course_meta[$course->id])) {
-            $meta = $course_meta[$course->id];
-            unset($meta->sortorder);
-            $course->meta = $meta;
-        } else {
-            $course->meta = (object) array('hide' => 0);
-        }
-
+        $course->meta = (object) array('hide' => 0, 'sortorder' => $order);
+        $order++;
         $categories["lastviewed"]->courses[$course->id] = $course;
     }
 

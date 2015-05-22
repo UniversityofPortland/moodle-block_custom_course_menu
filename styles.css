@@ -59,6 +59,10 @@
   display: none;
 }
 
+.block_my_courses #adminsearchquery {
+  max-width: 92%;
+}
+
 /* Layout helpers
 ----------------------------------*/
 .ui-helper-hidden {
