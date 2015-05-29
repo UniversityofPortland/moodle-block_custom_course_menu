@@ -48,9 +48,11 @@ class block_my_courses extends block_base {
             $strsearchcourses= get_string("search");
             $searchurl = new moodle_url('/course/search.php');
 
-            $footer   .= html_writer::start_tag('form', array('class' => "adminsearchform", 'action' => $searchurl, 'method' => 'get'));
-            $footer   .= html_writer::empty_tag('input', array('type' => 'text', 'id' => "adminsearchquery"));
+            $footer   .= html_writer::start_tag('form', array('id' => "coursesearch", 'action' => $searchurl, 'method' => 'get'));
+            $footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
+            $footer   .= html_writer::empty_tag('input', array('type' => 'text', 'name' => "search"));
             $footer   .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => $strsearchcourses));
+            $footer   .= html_writer::end_tag('fieldset');
             $footer   .= html_writer::end_tag('form');
         }
 
