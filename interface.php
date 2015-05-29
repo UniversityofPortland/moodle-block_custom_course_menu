@@ -274,25 +274,27 @@ function get_last_viewed() {
     $categories = array();
     $order=1;
     foreach ($latest_courses as $latest) {
-        $course = $DB->get_record('course', array('id' => $latest->courseid), '*', MUST_EXIST);
-        if (!isset($categories["lastviewed"])) {
-            $params = array('id' => "lastviewed");
-            $category =  new stdClass();
-            $category->name = "Last $CFG->block_my_courses_lastviewedamount Viewed";
-            $category->id = "lastviewed";
-            $category->courses = array();
-
-            if (isset($category_meta["lastviewed"])) {
-                $category->meta = $category_meta["lastviewed"];
-            } else {
-                $category->meta = (object) array('hide' => 0, 'sortorder' => 1);
+        if($course = $DB->get_record('course', array('id' => $latest->courseid), '*')){
+            if (!isset($categories["lastviewed"])) {
+                $params = array('id' => "lastviewed");
+                $category =  new stdClass();
+                $category->name = "Last $CFG->block_my_courses_lastviewedamount Viewed";
+                $category->id = "lastviewed";
+                $category->courses = array();
+                
+                if (isset($category_meta["lastviewed"])) {
+                    $category->meta = $category_meta["lastviewed"];
+                } else {
+                    $category->meta = (object) array('hide' => 0, 'sortorder' => 1);
+                }
+                
+                $categories["lastviewed"] = $category;
             }
-
-            $categories["lastviewed"] = $category;
+            $course->meta = (object) array('hide' => 0, 'sortorder' => $order);
+            $order++;
+            $categories["lastviewed"]->courses[$course->id] = $course;           
         }
-        $course->meta = (object) array('hide' => 0, 'sortorder' => $order);
-        $order++;
-        $categories["lastviewed"]->courses[$course->id] = $course;
+
     }
 
     return $categories;
