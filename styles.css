@@ -9,6 +9,11 @@
   list-style: none;
 }
 
+.block_my_courses input[type='text'] {
+  width: 80%;
+  max-width: 250px;   
+}
+
 .handle {
   cursor: move;
 }
