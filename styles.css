@@ -9,6 +9,11 @@
   list-style: none;
 }
 
+.block_my_courses input[type='text'] {
+  width: 80%;
+  max-width: 250px;   
+}
+
 .handle {
   cursor: move;
 }
@@ -57,6 +62,10 @@
 .block_my_courses ul.my_courses_list.inconspicuous,
 .block_my_courses ul.my_courses_list.collapsed {
   display: none;
+}
+
+.block_my_courses #adminsearchquery {
+  max-width: 92%;
 }
 
 /* Layout helpers
