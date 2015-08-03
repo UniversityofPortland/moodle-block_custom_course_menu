@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -13,15 +14,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Versioning file
- *
- * @package    block-my_courses
- * @category   blocks
- * @copyright  2015 University of Porltand
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-*/
 
 $plugin->version = 2014060901;
 $plugin->requires  = 2011070100; // Requires Moodle 2.1.
