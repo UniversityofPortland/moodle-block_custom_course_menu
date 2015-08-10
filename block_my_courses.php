@@ -12,7 +12,7 @@ class block_my_courses extends block_base {
             return $this->content;
         }
 
-        if ($CFG->version < 20150500) { // If not using Moodle 2.9+
+        if ($CFG->version < 2015051101) { // If not using Moodle 2.9+
             $PAGE->requires->js('/blocks/my_courses/js/jquery-1.9.1.min.js');
         	$PAGE->requires->js('/blocks/my_courses/js/ui/js/jquery-ui-1.10.3.min.js');
             $PAGE->requires->js('/blocks/my_courses/js/courses.js');    	
