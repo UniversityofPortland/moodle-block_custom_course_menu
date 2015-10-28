@@ -1,4 +1,4 @@
-# My Courses Block
+# Custom Course Menu Block
 
 A block to display enrolled course in a configurable manner for both
 students and teachers.
@@ -20,7 +20,7 @@ students and teachers.
 
 ## Installation
 
-Simply rename the `moodle-block_my_courses` to `my_courses`, move the folder into your blocks directory, and
+Simply rename the `moodle-block_custom_course_menu` to `custom_course_menu`, move the folder into your blocks directory, and
 run the _Notifications_ admin link.
 
 ## Instructions

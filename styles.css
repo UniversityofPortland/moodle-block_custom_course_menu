@@ -1,17 +1,17 @@
-.block_my_courses #my_courses_interface {
+.block_custom_course_menu #custom_course_menu_interface {
   float: right;
   margin: -12px -4px;
 }
 
-.block_my_courses ul.my_courses_category_list {
+.block_custom_course_menu ul.custom_course_menu_category_list {
   padding-left: 0px;
   margin: 0;
   list-style: none;
 }
 
-.block_my_courses input[type='text'] {
+.block_custom_course_menu input[type='text'] {
   width: 80%;
-  max-width: 250px;   
+  max-width: 250px;
 }
 
 .handle {
@@ -22,16 +22,16 @@
   cursor: default !important;
 }
 
-.block_my_courses ul.course-sortable .placeholder {
+.block_custom_course_menu ul.course-sortable .placeholder {
   border: 1px dashed #cdcdcd;
   height: 1.3em;
 }
 
-.block_my_courses ul.my_courses_category_list ul.inconspicuous {
+.block_custom_course_menu ul.custom_course_menu_category_list ul.inconspicuous {
   display: none;
 }
 
-.block_my_courses ul.my_courses_category_list li {
+.block_custom_course_menu ul.custom_course_menu_category_list li {
   margin-left: 1.5em;
   margin-bottom: 0;
   text-indent: -1.5em;
@@ -39,11 +39,11 @@
   font-weight: bold;
 }
 
-.block_my_courses ul.my_courses_category_list li.inconspicuous {
+.block_custom_course_menu ul.custom_course_menu_category_list li.inconspicuous {
   text-decoration: line-through;
 }
 
-.block_my_courses ul.my_courses_category_list ul {
+.block_custom_course_menu ul.custom_course_menu_category_list ul {
   padding-left: 0px;
   margin-left: 1em;
   margin-top: 0;
@@ -51,7 +51,7 @@
   list-style: none;
 }
 
-.block_my_courses ul.my_courses_category_list ul li {
+.block_custom_course_menu ul.custom_course_menu_category_list ul li {
   margin-left: 0.5em;
   margin-bottom: 0;
   text-indent: -1.5em;
@@ -59,12 +59,12 @@
   font-weight: normal;
 }
 
-.block_my_courses ul.my_courses_list.inconspicuous,
-.block_my_courses ul.my_courses_list.collapsed {
+.block_custom_course_menu ul.custom_course_menu_list.inconspicuous,
+.block_custom_course_menu ul.custom_course_menu_list.collapsed {
   display: none;
 }
 
-.block_my_courses #adminsearchquery {
+.block_custom_course_menu #adminsearchquery {
   max-width: 92%;
 }
 

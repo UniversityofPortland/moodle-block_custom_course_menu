@@ -1,3 +1,25 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * CustomCourseMenu Block Helper - Courses.js
+ *
+ * @package    block_custom_course_menu
+ * @copyright  2015 onwards University of Portland (www.up.edu)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 (function( factory ) {
 	if ( typeof define === "function" && define.amd ) {
 		require(["jquery", "jqueryui"], factory );
@@ -6,11 +28,11 @@
 	}
 }(function( $ ) {
 
-  var interfaceUrl = $('#my_courses_interface').attr('href');
-  var $container = $('#my_courses_dynamic');
+  var interfaceUrl = $('#custom_course_menu_interface').attr('href');
+  var $container = $('#custom_course_menu_dynamic');
 
   var saveSortsFor = function(type, $ul) {
-    var url = $('#my_courses_sort').text();
+    var url = $('#custom_course_menu_sort').text();
     var regex = new RegExp(type + "id=([\\w-]{1,25})");
 
     var ids = [];
@@ -49,7 +71,7 @@
 
   var categorySwitcher = function() {
     var $this = $(this);
-    var $list = $this.siblings('.my_courses_list');
+    var $list = $this.siblings('.custom_course_menu_list');
     var collapsed = $this.hasClass('minus');
 
     if (collapsed) {
@@ -66,7 +88,7 @@
 
     $this.removeClass(toRemove).addClass(toAdd);
     $list.removeClass(listRemove).addClass(listAdd);
-    $this.html($('#my_courses_' + toAdd).html());
+    $this.html($('#custom_course_menu_' + toAdd).html());
 
     $.ajax({
       url: $this.attr('href'),
@@ -79,7 +101,7 @@
   var itemVisibility = function() {
     var $this = $(this);
     var $parent = $this.parent();
-    var $list = $this.siblings('.my_courses_list');
+    var $list = $this.siblings('.custom_course_menu_list');
     var hidden = $this.hasClass('inconspicuous');
 
     if (hidden) {
@@ -94,7 +116,7 @@
     $list.removeClass(toRemove).addClass(toAdd);
     $parent.removeClass(toRemove).addClass(toAdd);
 
-    $this.html($('#my_courses_' + toAdd).html());
+    $this.html($('#custom_course_menu_' + toAdd).html());
 
     $.ajax({
       url: $this.attr('href'),
@@ -132,9 +154,9 @@
       }
 
       if (html == 'You are not enrolled in any courses.') {
-        $('#my_courses_interface').hide();
+        $('#custom_course_menu_interface').hide();
       } else {
-        $('#my_courses_interface').show();
+        $('#custom_course_menu_interface').show();
       }
 
       if($('.course-sortable').length){ $('.course-sortable').sortable(sortableObject); }
@@ -146,14 +168,14 @@
 
   createInterface();
 
-  $('#my_courses_interface').click(function() {
+  $('#custom_course_menu_interface').click(function() {
     $container.html($('<span/>').addClass('interface').text('Loading...'));
 
     createInterface(!$container.hasClass('editing'));
     return false;
   });
-  
-  $('#my_courses_interface').mouseover(function() {
+
+  $('#custom_course_menu_interface').mouseover(function() {
     if ($container.hasClass('editing')) {
       $(this).prepend("<span id='overtext'>Finish Editing </span>");
     } else {
@@ -162,7 +184,7 @@
     return false;
   });
 
-  $('#my_courses_interface').mouseout(function() {
+  $('#custom_course_menu_interface').mouseout(function() {
     $('#overtext').remove();
     return false;
   });

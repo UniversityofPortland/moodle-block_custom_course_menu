@@ -1,12 +1,12 @@
 <?php
-// $Id: block_my_courses.php,v 1.2 2008-09-03 09:44:03 moodler Exp $
-// block_my_courses.php
+// $Id: block_custom_course_menu.php,v 1.2 2008-09-03 09:44:03 moodler Exp $
+// block_custom_course_menu.php
 
-$string['pluginname'] = 'My Courses Menu';
+$string['pluginname'] = 'Custom Course Menu';
 $string['course'] = 'Course';
 
-$string['my_courses:addinstance'] = 'The ability to add on Site page';
-$string['my_courses:myaddinstance'] = 'The ability to add on the My page';
+$string['custom_course_menu:addinstance'] = 'The ability to add on Site page';
+$string['custom_course_menu:myaddinstance'] = 'The ability to add on the My page';
 
 $string['adminonly'] = 'Admin Only';
 $string['enablelastviewed'] = 'Last viewed courses section';

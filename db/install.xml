@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/my_courses/db" VERSION="20080903" COMMENT="XMLDB file for Moodle my_courses block"
+<XMLDB PATH="blocks/custom_course_menu/db" VERSION="20151026" COMMENT="XMLDB file for Moodle custom_course_menu block"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="block_my_courses" COMMENT="Track collapsed/expanded status for a category per user." NEXT="block_my_courses_meta">
+    <TABLE NAME="block_custom_course_menu" COMMENT="Track collapsed/expanded status for a category per user.">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="userid"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="categoryid"/>
-        <FIELD NAME="categoryid" TYPE="char" LENGTH="20" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="userid" NEXT="collapsed"/>
-        <FIELD NAME="collapsed" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" PREVIOUS="categoryid"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="usercat" UNIQUE="true" FIELDS="userid, categoryid"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="block_my_courses_meta" COMMENT="The table containing hide, and sortorder info per user per course / category" PREVIOUS="block_my_courses">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="item"/>
-        <FIELD NAME="item" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="category" SEQUENCE="false" PREVIOUS="userid" NEXT="itemid"/>
-        <FIELD NAME="itemid" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" PREVIOUS="item" NEXT="hide"/>
-        <FIELD NAME="hide" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="itemid" NEXT="sortorder"/>
-        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="hide" NEXT="fav"/>
-        <FIELD NAME="fav" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sortorder"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="categoryid" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="collapsed" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="useiteitemid" UNIQUE="true" FIELDS="userid, item, itemid" NEXT="useritem"/>
-        <INDEX NAME="useritem" UNIQUE="false" FIELDS="userid, item" PREVIOUS="useiteitemid"/>
+        <INDEX NAME="usercat" UNIQUE="true" FIELDS="userid, categoryid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="block_custom_course_menu_etc" COMMENT="The table containing hide, and sortorder info per user per course / category">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="item" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="category" SEQUENCE="false"/>
+        <FIELD NAME="itemid" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="hide" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fav" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="useiteitemid" UNIQUE="true" FIELDS="userid, item, itemid"/>
+        <INDEX NAME="useritem" UNIQUE="false" FIELDS="userid, item"/>
       </INDEXES>
     </TABLE>
   </TABLES>
