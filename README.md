@@ -1,4 +1,10 @@
-# My Courses Block
+# My Courses Block (Old Version)
+
+********NOTE********
+This is the old version of the block. The new version is called "Custom Course Menu" and is located in the master branch of this repo. The block was re-named so that it can be submitted to the Moodle plugin database (there was already a block named my_courses).
+
+This new blocks will work independently from the old. It is recommended that you delete the old my_courses block after installing the new. If you replace the old block with this one, all users will have their saved menus reset.
+****************
 
 A block to display enrolled course in a configurable manner for both
 students and teachers.
