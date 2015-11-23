@@ -24,13 +24,13 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configcheckbox('block_custom_course_menu_enablefavorites',
+    $settings->add(new admin_setting_configcheckbox('block_custom_course_menu/enablefavorites',
                        get_string('enablefavorites', 'block_custom_course_menu'),
                        get_string('configenablefavorites', 'block_custom_course_menu'), 0));
-    $settings->add(new admin_setting_configcheckbox('block_custom_course_menu_enablelastviewed',
+    $settings->add(new admin_setting_configcheckbox('block_custom_course_menu/enablelastviewed',
                        get_string('enablelastviewed', 'block_custom_course_menu'),
                        get_string('configenablelastviewed', 'block_custom_course_menu'), 0));
-    $settings->add(new admin_setting_configtext('block_custom_course_menu_lastviewedamount',
+    $settings->add(new admin_setting_configtext('block_custom_course_menu/lastviewedamount',
                        get_string('lastviewedamount', 'block_custom_course_menu'),
                        get_string('configlastviewedamount', 'block_custom_course_menu'), 5, PARAM_INT));
 
@@ -41,7 +41,7 @@ if ($ADMIN->fulltree) {
     );
     $name = new lang_string('attemptreopenmethod', 'mod_assign');
     $description = new lang_string('attemptreopenmethod_help', 'mod_assign');
-    $settings->add(new admin_setting_configselect('block_custom_course_menu_showsearch',
+    $settings->add(new admin_setting_configselect('block_custom_course_menu/showsearch',
                                                     get_string('showsearch', 'block_custom_course_menu'),
                                                      get_string('configshowsearch', 'block_custom_course_menu'),
                                                     0,
