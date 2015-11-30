@@ -40,12 +40,12 @@ $favonicon = $OUTPUT->pix_icon('t/add', 'Add to favorites');
 $favofficon = $OUTPUT->pix_icon('t/less', 'Remove from favorites');
 
 $categories = array();
-if (!empty($CFG->block_custom_course_menu_enablefavorites)) {
+
+if (!empty(get_config('block_custom_course_menu_enablefavorites'))) {
     $favorites = get_my_favorites();
     $categories = array_merge($favorites, $categories);
 }
-
-if (!empty($CFG->block_custom_course_menu_enablelastviewed)) {
+if (!empty(get_config('block_custom_course_menu_enablelastviewed'))) {
     $lastviewed = get_last_viewed();
     $categories = array_merge($lastviewed, $categories);
 }
@@ -285,17 +285,16 @@ function get_last_viewed() {
 
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
-
+	$lva = get_config('block_custom_course_menu')->lastviewedamount;
     if ($CFG->version < 2014051200) { // Moodle < 2.7.
         $sql = "SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON
                 c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON
-                a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT
-                $CFG->block_custom_course_menu_lastviewedamount";
+                a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $lva)";
     } else { // Moodle 2.7+.
         $sql = "SELECT courseid, max(timecreated) as date FROM {logstore_standard_log} WHERE userid='$USER->id' AND
-                courseid > 1 GROUP BY courseid ORDER BY `date` DESC LIMIT $CFG->block_custom_course_menu_lastviewedamount";
+                courseid > 1 GROUP BY courseid ORDER BY `date` DESC LIMIT $lva";
     }
-
+	//$CFG->block_custom_course_menu_lastviewedamount
     $latestcourses = $DB->get_records_sql($sql);
 
     $categories = array();
@@ -305,7 +304,7 @@ function get_last_viewed() {
             if (!isset($categories["lastviewed"])) {
                 $params = array('id' => "lastviewed");
                 $category = new stdClass();
-                $category->name = "Last $CFG->block_custom_course_menu_lastviewedamount Viewed";
+                $category->name = "Last $lva Viewed";
                 $category->id = "lastviewed";
                 $category->courses = array();
 
@@ -334,13 +333,12 @@ function get_last_viewed() {
  */
 function get_my_favorites() {
     global $CFG, $DB, $USER;
-
+	
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
     $sql = "SELECT * FROM {course} c WHERE c.id IN (SELECT itemid FROM {block_custom_course_menu_etc} WHERE userid = :userid
             AND fav = 1) ORDER BY c.fullname";
     $courses = $DB->get_records_sql($sql, array('userid' => $USER->id));
-
     $categories = array();
     foreach ($courses as $course) {
         if (!isset($categories["favs"])) {
