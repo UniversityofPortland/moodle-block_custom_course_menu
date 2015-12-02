@@ -134,7 +134,7 @@ foreach ($categories as $category) {
                 'courseid' => $course->id,
             ));
 
-            if (!empty($CFG->block_custom_course_menu_enablefavorites)) {
+            if (!empty(get_config('block_custom_course_menu_enablefavorites'))) {
                 $favswitch = empty($course->meta->fav) ? 'favon' : 'favoff';
                 $switchicon = ${$favswitch . 'icon'};
 
@@ -333,7 +333,6 @@ function get_last_viewed() {
  */
 function get_my_favorites() {
     global $CFG, $DB, $USER;
-	
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
     $sql = "SELECT * FROM {course} c WHERE c.id IN (SELECT itemid FROM {block_custom_course_menu_etc} WHERE userid = :userid

@@ -23,11 +23,8 @@
  */
 require_once('../../config.php');
 
-if (!isloggedin()|| !confirm_sesskey()) {
-    die();
-}
-else if($USER->sesskey == false){
-	die();
+if (!isloggedin()){
+	    die();
 }
 
 $userid = required_param('userid', PARAM_INT);
