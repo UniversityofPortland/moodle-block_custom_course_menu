@@ -1,5 +1,5 @@
 <?php
-// This file is part of
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,16 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Step 1(Search form).
+ * CustomCourseMenu Transition Tool
  *
- * @package    tool_coursearchiver
- * @copyright  2015 Matthew Davidson
+ * @package    block_custom_course_menu
+ * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-define('NO_OUTPUT_BUFFERING', true);
 
 require(__DIR__ . '/../../config.php');
 
