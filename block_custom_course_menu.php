@@ -65,10 +65,11 @@ class block_custom_course_menu extends block_base {
                                          array("style" => "text-align:center;")));
         }
 
-        if (!empty($CFG->block_custom_course_menu_showsearch) &&
-            ($CFG->block_custom_course_menu_showsearch == 1 ||
-            ($CFG->block_custom_course_menu_showsearch == "admin" && (is_siteadmin($USER->id) ||
-              has_capability('moodle/cohort:manage', context_system::instance(), $USER->id))))) {
+        $showsearch = get_config('block_custom_course_menu')->showsearch;
+        if (!empty($showsearch) &&
+                ($showsearch == 1 ||
+                ($showsearch == "admin" &&
+                (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id))))) {
             $strsearchcourses = get_string("search");
             $searchurl = new moodle_url('/course/search.php');
 
