@@ -23,7 +23,7 @@
  */
 require_once('../../config.php');
 
-if (!isloggedin()|| !confirm_sesskey()) {
+if (!isloggedin() ){ //|| !confirm_sesskey()) {
     die();
 }
 
