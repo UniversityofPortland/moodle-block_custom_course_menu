@@ -23,14 +23,15 @@
  */
 require_once('../../config.php');
 
-if (!isloggedin() ){
-	    die();
+if (!isloggedin()) {
+    die();
 }
 
-$userid = $USER->id;
+$userid = required_param('userid', PARAM_INT);
 $courseid = optional_param('courseid', null, PARAM_INT);
+$categoryid = optional_param('categoryid', null, PARAM_NOTAGS);
 
-if ( (empty($courseid) && empty($userid)) ){
+if ((empty($courseid) && empty($categoryid)) || empty($userid)) {
     die();
 }
 

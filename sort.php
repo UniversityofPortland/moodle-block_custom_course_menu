@@ -23,11 +23,10 @@
  */
 require_once('../../config.php');
 
-if (!isloggedin()|| !confirm_sesskey()) {
+if (!isloggedin() || !confirm_sesskey()) {
     die();
-}
-else if($USER->sesskey == false){
-	die();
+} else if ($USER->sesskey == false) {
+    die();
 }
 
 $type = required_param('type', PARAM_TEXT);

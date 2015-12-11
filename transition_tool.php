@@ -33,7 +33,7 @@ try {
     $DB->insert_records('block_custom_course_menu', $dataobjects1);
     $DB->insert_records('block_custom_course_menu_etc', $dataobjects2);
     echo $OUTPUT->container('Transition Completed');
-} catch(Exception $e) {
+} catch (Exception $e) {
     echo $OUTPUT->container('Transition has already occured');
 }
 

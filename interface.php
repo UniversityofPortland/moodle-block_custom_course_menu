@@ -245,6 +245,12 @@ function get_category_tree() {
     return $categories;
 }
 
+/**
+ * Sorts categories
+ *
+ * @param array $categories
+ * @return array
+ */
 function sort_my_categories($categories) {
     uasort($categories, function($cata, $catb) {
         if (isset($cata->meta->sortorder) && isset($catb->meta->sortorder)) {
@@ -285,7 +291,7 @@ function get_last_viewed() {
 
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
-	$lva = get_config('block_custom_course_menu')->lastviewedamount;
+    $lva = get_config('block_custom_course_menu')->lastviewedamount;
     if ($CFG->version < 2014051200) { // Moodle < 2.7.
         $sql = "SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON
                 c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON
@@ -294,7 +300,7 @@ function get_last_viewed() {
         $sql = "SELECT courseid, max(timecreated) as date FROM {logstore_standard_log} WHERE userid='$USER->id' AND
                 courseid > 1 GROUP BY courseid ORDER BY `date` DESC LIMIT $lva";
     }
-	//$CFG->block_custom_course_menu_lastviewedamount
+
     $latestcourses = $DB->get_records_sql($sql);
 
     $categories = array();
