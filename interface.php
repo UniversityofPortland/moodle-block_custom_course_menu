@@ -40,12 +40,12 @@ $favonicon = $OUTPUT->pix_icon('t/add', 'Add to favorites');
 $favofficon = $OUTPUT->pix_icon('t/less', 'Remove from favorites');
 
 $categories = array();
-
-if (!empty(get_config('block_custom_course_menu_enablefavorites'))) {
+$configs = get_config('block_custom_course_menu');
+if (!empty($configs->enablefavorites)) {
     $favorites = get_my_favorites();
     $categories = array_merge($favorites, $categories);
 }
-if (!empty(get_config('block_custom_course_menu_enablelastviewed'))) {
+if (!empty($configs->enablelastviewed)) {
     $lastviewed = get_last_viewed();
     $categories = array_merge($lastviewed, $categories);
 }
@@ -134,7 +134,7 @@ foreach ($categories as $category) {
                 'courseid' => $course->id,
             ));
 
-            if (!empty(get_config('block_custom_course_menu_enablefavorites'))) {
+            if (!empty($configs->enablefavorites)) {
                 $favswitch = empty($course->meta->fav) ? 'favon' : 'favoff';
                 $switchicon = ${$favswitch . 'icon'};
 
