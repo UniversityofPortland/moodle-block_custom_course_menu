@@ -14,7 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$plugin->version = 2015102603; //2014060901
+/**
+ * Version details
+ *
+ * @package    block_custom_course_menu
+ * @copyright  2015 onwards University of Portland (www.up.edu)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version = 2015102603;
 $plugin->requires  = 2011070100; // Requires Moodle 2.1.
 $plugin->component = 'block_custom_course_menu';
 $plugin->maturity  = MATURITY_STABLE;
