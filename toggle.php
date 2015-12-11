@@ -25,9 +25,8 @@ require_once('../../config.php');
 
 if (!isloggedin()|| !confirm_sesskey()) {
     die();
-}
-else if($USER->sesskey == false){
-	die();
+} else if ($USER->sesskey == false) {
+    die();
 }
 
 $catid = required_param('categoryid', PARAM_NOTAGS);

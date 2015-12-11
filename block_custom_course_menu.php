@@ -22,11 +22,27 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Main content class
+ *
+ * @package    block_custom_course_menu
+ * @copyright  2015 onwards University of Portland (www.up.edu)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_custom_course_menu extends block_base {
+
+    /**
+     * Initialise the block.
+     */
     public function init() {
         $this->title = get_string('pluginname', 'block_custom_course_menu');
     }
 
+    /**
+     * Return the content of this block.
+     *
+     * @return stdClass the content
+     */
     public function get_content() {
         global $THEME, $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
@@ -65,10 +81,11 @@ class block_custom_course_menu extends block_base {
                                          array("style" => "text-align:center;")));
         }
 
-        if (!empty($CFG->block_custom_course_menu_showsearch) &&
-            ($CFG->block_custom_course_menu_showsearch == 1 ||
-            ($CFG->block_custom_course_menu_showsearch == "admin" && (is_siteadmin($USER->id) ||
-              has_capability('moodle/cohort:manage', context_system::instance(), $USER->id))))) {
+        $showsearch = get_config('block_custom_course_menu')->showsearch;
+        if (!empty($showsearch) &&
+                ($showsearch == 1 ||
+                ($showsearch == "admin" &&
+                (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id))))) {
             $strsearchcourses = get_string("search");
             $searchurl = new moodle_url('/course/search.php');
 
@@ -89,16 +106,13 @@ class block_custom_course_menu extends block_base {
 
         $editicon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
         $interface = new moodle_url('/blocks/custom_course_menu/interface.php');
-        $this->content->footer .= html_writer::link($interface, $editicon, array_merge(array('id' => 'custom_course_menu_interface'),
-                                                    $hidelink));
+        $this->content->footer .= html_writer::link($interface,
+                                                    $editicon,
+                                                    array_merge(array('id' => 'custom_course_menu_interface'), $hidelink));
         $this->content->footer .= html_writer::tag('div', '', array("style" => "clear:both;"));
         $this->content->text = $html;
 
         return $this->content;
-    }
-
-    public function has_config() {
-        return true;
     }
 }
 

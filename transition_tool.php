@@ -13,44 +13,28 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * CustomCourseMenu Helper - Favorite
+ * CustomCourseMenu Transition Tool
  *
  * @package    block_custom_course_menu
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
 
-if (!isloggedin()) {
-    die();
+require(__DIR__ . '/../../config.php');
+
+require_login();
+
+echo $OUTPUT->header();
+
+try {
+    $dataobjects1 = $DB->get_records_sql('SELECT * FROM {block_my_courses}', array());
+    $dataobjects2 = $DB->get_records_sql('SELECT * FROM {block_my_courses_meta}', array());
+    $DB->insert_records('block_custom_course_menu', $dataobjects1);
+    $DB->insert_records('block_custom_course_menu_etc', $dataobjects2);
+    echo $OUTPUT->container('Transition Completed');
+} catch (Exception $e) {
+    echo $OUTPUT->container('Transition has already occured');
 }
 
-$userid = required_param('userid', PARAM_INT);
-$courseid = optional_param('courseid', null, PARAM_INT);
-$categoryid = optional_param('categoryid', null, PARAM_NOTAGS);
-
-if ((empty($courseid) && empty($categoryid)) || empty($userid)) {
-    die();
-}
-
-$itemid = $courseid;
-$item = 'course';
-
-$params = array(
-    'userid' => $userid,
-    'item' => $item,
-    'itemid' => $itemid,
-);
-
-$entry = $DB->get_record('block_custom_course_menu_etc', $params);
-
-if ($entry) {
-    $entry->fav = $entry->fav ? 0 : 1;
-    $DB->update_record('block_custom_course_menu_etc', $entry);
-} else {
-    $entry = (object) $params;
-    $entry->fav = 1;
-    $DB->insert_record('block_custom_course_menu_etc', $entry);
-}
+echo $OUTPUT->footer();
