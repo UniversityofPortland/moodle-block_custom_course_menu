@@ -23,8 +23,8 @@
  */
 require_once('../../config.php');
 
-if (!isloggedin()){
-	    die();
+if (!isloggedin()) {
+    die();
 }
 
 $userid = required_param('userid', PARAM_INT);

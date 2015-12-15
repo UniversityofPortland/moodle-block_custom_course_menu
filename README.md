@@ -23,6 +23,8 @@ students and teachers.
 Simply rename the `moodle-block_custom_course_menu` to `custom_course_menu`, move the folder into your blocks directory, and
 run the _Notifications_ admin link.
 
+*NOTE: If you are replacing the old block_my_courses with this new version, make sure you run the transition_tool.php file BEFORE uninstalling the old my_courses block. This will migrate all of the my_courses block data to the new custom_course_menu block.*
+
 ## Instructions
 
 1. Turn block editing mode on by clicking the **gear icon** in the bottom right corner.
