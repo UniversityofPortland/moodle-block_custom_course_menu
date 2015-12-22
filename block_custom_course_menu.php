@@ -81,21 +81,22 @@ class block_custom_course_menu extends block_base {
                                          array("style" => "text-align:center;")));
         }
 
-        $showsearch = get_config('block_custom_course_menu')->showsearch;
-        if (!empty($showsearch) &&
-                ($showsearch == 1 ||
-                ($showsearch == "admin" &&
-                (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id))))) {
-            $strsearchcourses = get_string("search");
-            $searchurl = new moodle_url('/course/search.php');
+        if(isset(get_config('block_custom_course_menu')->showsearch)) {
+	    $showsearch = get_config('block_custom_course_menu')->showsearch;
+	    if ($showsearch == 1 ||
+               ($showsearch == "admin" &&
+	       (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)))) {
+      	        $strsearchcourses = get_string("search");
+	        $searchurl = new moodle_url('/course/search.php');
 
-            $footer   .= html_writer::start_tag('form', array('id' => "coursesearch", 'action' => $searchurl, 'method' => 'get'));
-            $footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
-            $footer   .= html_writer::empty_tag('input', array('type' => 'text', 'name' => "search"));
-            $footer   .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => $strsearchcourses));
-            $footer   .= html_writer::end_tag('fieldset');
-            $footer   .= html_writer::end_tag('form');
-        }
+		$footer   .= html_writer::start_tag('form', array('id' => "coursesearch", 'action' => $searchurl, 'method' => 'get'));
+        	$footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
+	        $footer   .= html_writer::empty_tag('input', array('type' => 'text', 'name' => "search"));
+	        $footer   .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => $strsearchcourses));
+		$footer   .= html_writer::end_tag('fieldset');
+        	$footer   .= html_writer::end_tag('form');
+            }
+	}
 
         $this->content->footer = $footer;
 
