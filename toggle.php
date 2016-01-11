@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../config.php');
-
+/*
 if (!isloggedin() ){ //|| !confirm_sesskey()) {
     die();
 }
-
+*/
 $catid = required_param('categoryid', PARAM_NOTAGS);
 $userid = required_param('userid', PARAM_INT);
 
