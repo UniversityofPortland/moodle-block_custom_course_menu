@@ -22,13 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../config.php');
-/*
-if (!isloggedin()|| !confirm_sesskey()) {
-    die();
-} else if ($USER->sesskey == false) {
+
+if (!isloggedin()) {
     die();
 }
-*/
+
 $userid = required_param('userid', PARAM_INT);
 $courseid = optional_param('courseid', null, PARAM_INT);
 $categoryid = optional_param('categoryid', null, PARAM_NOTAGS);

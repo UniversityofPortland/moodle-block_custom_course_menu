@@ -22,13 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../config.php');
-/*
-if (!isloggedin() || !confirm_sesskey()) {
-    die();
-} else if ($USER->sesskey == false) {
+
+if (!isloggedin()) {
     die();
 }
-*/
+
 $type = required_param('type', PARAM_TEXT);
 $userid = required_param('userid', PARAM_INT);
 $ids = required_param('ids', PARAM_TEXT);
