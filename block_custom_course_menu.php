@@ -39,6 +39,39 @@ class block_custom_course_menu extends block_base {
     }
 
     /**
+     * Initalizes settings from settings.php
+     */
+    private function initSettings() {
+            global $DB;
+            //these should automatically be created when the block is installed.
+            //if they are not, they need to be configured.
+            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_enablefavorites'))) {
+                    $this->clientid = $DB->get_record('config', array('name' => 'block_custom_course_menu_enablefavorites'))->value;
+            }
+
+            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_enablelastviewed'))) {
+                    $this->clientsecret = $DB->get_record('config', array('name' => 'block_custom_course_menu_enablelastviewed'))->value;
+            }
+
+            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_lastviewedamount'))) {
+                    $this->prefix = $DB->get_record('config', array('name' => 'block_custom_course_menu_lastviewedamount'))->value;
+            }
+
+            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_showsearch'))) {
+                    $this->base_url = $DB->get_record('config', array('name' => 'block_custom_course_menu_showsearch'))->value;
+            }
+
+    }
+
+    /**
+     * required for settings.php
+     * @see block_base::has_config()
+     */
+    public function has_config() {
+            return true;
+    }
+
+    /**
      * Return the content of this block.
      *
      * @return stdClass the content
