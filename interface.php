@@ -296,8 +296,9 @@ function get_last_viewed() {
                 c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON
                 a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $lva)";
     } else { // Moodle 2.7+.
-        $sql = "SELECT courseid, max(timecreated) as date FROM {logstore_standard_log} WHERE userid='$USER->id' AND
-                courseid > 1 GROUP BY courseid ORDER BY `date` DESC LIMIT $lva";
+        $sql = "SELECT a.courseid, max(a.timecreated) as date, a.userid FROM (SELECT * FROM {logstore_standard_log} 
+				WHERE courseid !=0 and courseid !=1) as a WHERE a.userid='$USER->id' GROUP BY a.courseid ORDER BY date
+				DESC LIMIT $lva";
     }
 
     $latestcourses = $DB->get_records_sql($sql);
@@ -318,7 +319,7 @@ function get_last_viewed() {
                 } else {
                     $category->meta = (object) array('hide' => 0, 'sortorder' => 1);
                 }
-
+				
                 $categories["lastviewed"] = $category;
             }
             $course->meta = (object) array('hide' => 0, 'sortorder' => $order);
