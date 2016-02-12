@@ -21,9 +21,10 @@
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
 define('AJAX_SCRIPT', true);
-if (!isloggedin()) {
+require_once('../../config.php');
+
+if (!isloggedin() || confirm_sesskey(sessid) ) {
     die();
 }
 
@@ -69,10 +70,10 @@ foreach ($ids as $index => $id) {
     $entry->userid = $userid;
     $entry->itemid = $id;
     $entry->sortorder = $sortorder[$index];
-
-    if (isset($entry->id)) {
-    	$DB->update_record('block_custom_course_menu_etc', $entry);
-    } else {
-    	$DB->insert_record('block_custom_course_menu_etc', $entry);
-    }
+		if (isset($entry->id)) {
+    		$DB->update_record('block_custom_course_menu_etc', $entry);
+    	} else {
+    		$DB->insert_record('block_custom_course_menu_etc', $entry);
+    	}
+    
 }
