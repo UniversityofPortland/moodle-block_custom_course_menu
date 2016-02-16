@@ -29,3 +29,4 @@ $plugin->requires  = 2011070100; // Requires Moodle 2.1.
 $plugin->component = 'block_custom_course_menu';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.0';
+$plugin->component = 'block_custom_course_menu';
