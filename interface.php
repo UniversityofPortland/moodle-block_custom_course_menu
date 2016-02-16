@@ -21,7 +21,6 @@
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once('../../config.php');
 $PAGE->set_context(context_system::instance());
 

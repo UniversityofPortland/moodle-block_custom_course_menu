@@ -163,9 +163,15 @@
   };
 
   var createInterface = function(editing) {
+  	var sessionid = M.cfg.sesskey;
+	
+	 var params = {
+	  editing: editing ? 1 : 0,
+      sessid: sessionid,
+    };
     $.ajax({
       url: interfaceUrl,
-      data: { editing: editing ? 1 : 0 },
+      data: params, //{ editing: editing ? 1 : 0 }, params,
     }).done(function(html) {
       $container.html(html);
 
