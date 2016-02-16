@@ -28,7 +28,7 @@ if (!isloggedin()) {
 }
 
 $catid = required_param('categoryid', PARAM_NOTAGS);
-$userid = required_param('userid', PARAM_INT);
+$userid = $USER->id;
 
 $params = array(
   'userid' => $userid,

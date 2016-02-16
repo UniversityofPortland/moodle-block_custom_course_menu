@@ -22,13 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../config.php');
-
+define('AJAX_SCRIPT', true);
 if (!isloggedin()) {
     die();
 }
 
 $type = required_param('type', PARAM_TEXT);
-$userid = required_param('userid', PARAM_INT);
+$userid = $USER->id;
 $ids = required_param('ids', PARAM_TEXT);
 $sortorder = required_param('sortorder', PARAM_TEXT);
 
@@ -71,8 +71,8 @@ foreach ($ids as $index => $id) {
     $entry->sortorder = $sortorder[$index];
 
     if (isset($entry->id)) {
-        $DB->update_record('block_custom_course_menu_etc', $entry);
+    	$DB->update_record('block_custom_course_menu_etc', $entry);
     } else {
-        $DB->insert_record('block_custom_course_menu_etc', $entry);
+    	$DB->insert_record('block_custom_course_menu_etc', $entry);
     }
 }

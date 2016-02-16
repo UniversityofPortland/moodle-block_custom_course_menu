@@ -27,7 +27,7 @@ if (!isloggedin()) {
     die();
 }
 
-$userid = required_param('userid', PARAM_INT);
+$userid = $USER->id;
 $courseid = optional_param('courseid', null, PARAM_INT);
 $categoryid = optional_param('categoryid', null, PARAM_NOTAGS);
 
