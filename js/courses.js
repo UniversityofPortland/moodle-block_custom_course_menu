@@ -37,6 +37,7 @@
 
     var ids = [];
     var sortorder = [];
+    var sessionid = M.cfg.sesskey;
 
     $ul.children().each(function(index, elem) {
       var href = $(elem).find('.item_visibility').attr('href');
@@ -46,6 +47,7 @@
 
     var params = {
       type: type,
+      sessid: sessionid,
       ids: ids.join(","),
       sortorder: sortorder.join(","),
     };
@@ -90,8 +92,15 @@
     $list.removeClass(listRemove).addClass(listAdd);
     $this.html($('#custom_course_menu_' + toAdd).html());
 
+	var sessionid = M.cfg.sesskey;
+
+	var params = {
+      sessid: sessionid,
+    };
+
     $.ajax({
       url: $this.attr('href'),
+      data: params,
       type: "POST",
     });
 
@@ -118,8 +127,15 @@
 
     $this.html($('#custom_course_menu_' + toAdd).html());
 
+	var sessionid = M.cfg.sesskey;
+	
+	 var params = {
+      sessid: sessionid,
+    };    
+
     $.ajax({
       url: $this.attr('href'),
+      data: params,
       type: "POST",
     });
 
@@ -128,9 +144,15 @@
 
   var itemFavorite = function() {
     var $this = $(this);
-
+	var sessionid = M.cfg.sesskey;
+	
+	 var params = {
+      sessid: sessionid,
+    };
+	
     $.ajax({
       url: $this.attr('href'),
+      data: params,
       type: "POST",
     }).done(function() {
         //refresh editing area
@@ -141,9 +163,15 @@
   };
 
   var createInterface = function(editing) {
+  	var sessionid = M.cfg.sesskey;
+	
+	 var params = {
+	  editing: editing ? 1 : 0,
+      sessid: sessionid,
+    };
     $.ajax({
       url: interfaceUrl,
-      data: { editing: editing ? 1 : 0 },
+      data: params, //{ editing: editing ? 1 : 0 }, params,
     }).done(function(html) {
       $container.html(html);
 
