@@ -45,10 +45,10 @@
       sortorder.push(index);
     });
 
-    var params = {
+     var params = {
       type: type,
       sessid: sessionid,
-      ids: ids.join(","),
+      ids: ids,
       sortorder: sortorder.join(","),
     };
 

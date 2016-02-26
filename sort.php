@@ -30,33 +30,23 @@ if (!isloggedin() || confirm_sesskey(sessid)) {
 
 $type = required_param('type', PARAM_TEXT);
 $userid = $USER->id;
-$ids = required_param('ids', PARAM_TEXT);
+$ids = required_param_array('ids', PARAM_INT);
 $sortorder = required_param('sortorder', PARAM_TEXT);
-
-$ids = explode(',', $ids);
 $sortorder = explode(',', $sortorder);
 
-if (count($ids) != count($sortorder)) {
-    die();
-}
+// Prepare parameters for furture sql query. 
+$ids = array_values($ids); 
+$params = array($type, $userid); 
+list($sqlidstest, $idsparams) = $DB->get_in_or_equal($ids); 
+$params = array_merge($params, $idsparams); 
+$sqlidstest = ' AND itemid ' .$sqlidstest;
 
 $sql = 'SELECT itemid, id, item, sortorder, hide '
      . 'FROM {block_custom_course_menu_etc} '
-     . 'WHERE item = :type '
-     . 'AND userid = :userid '
-     . 'AND itemid IN';
+     . 'WHERE item = ? '
+     . ' AND userid = ? ' .$sqlidstest;
 
-$sqlids = array();
-foreach ($ids as $index => $id) {
-    $sqlids["key$index"] = $id;
-}
-
-$sql .= '(:' . implode(',:', array_keys($sqlids)) . ')';
-
-$entries = $DB->get_records_sql($sql, $sqlids + array(
-    'userid' => $userid,
-    'type' => $type,
-));
+$entries = $DB->get_records_sql($sql, $params);
 
 foreach ($ids as $index => $id) {
     if (isset($entries[$id])) {
