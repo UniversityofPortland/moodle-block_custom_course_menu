@@ -24,7 +24,8 @@
 define('AJAX_SCRIPT', true);
 require_once('../../config.php');
 
-if (!isloggedin() || confirm_sesskey(sessid)) {
+require_sesskey();
+if (!isloggedin() ){
     die();
 }
 
