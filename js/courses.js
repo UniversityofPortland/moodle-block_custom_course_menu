@@ -47,7 +47,7 @@
 
      var params = {
       type: type,
-      sessid: sessionid,
+      sesskey: sessionid,
       ids: ids,
       sortorder: sortorder.join(","),
     };
@@ -95,7 +95,7 @@
 	var sessionid = M.cfg.sesskey;
 
 	var params = {
-      sessid: sessionid,
+      sesskey: sessionid,
     };
 
     $.ajax({
@@ -130,7 +130,7 @@
 	var sessionid = M.cfg.sesskey;
 	
 	 var params = {
-      sessid: sessionid,
+      sesskey: sessionid,
     };    
 
     $.ajax({
@@ -147,7 +147,7 @@
 	var sessionid = M.cfg.sesskey;
 	
 	 var params = {
-      sessid: sessionid,
+      sesskey: sessionid,
     };
 	
     $.ajax({
@@ -167,11 +167,11 @@
 	
 	 var params = {
 	  editing: editing ? 1 : 0,
-      sessid: sessionid,
+      sesskey: sessionid,
     };
     $.ajax({
       url: interfaceUrl,
-      data: params, //{ editing: editing ? 1 : 0 }, params,
+      data: params, 
     }).done(function(html) {
       $container.html(html);
 
