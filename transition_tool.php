@@ -32,6 +32,7 @@ try {
     $dataobjects2 = $DB->get_records_sql('SELECT * FROM {block_my_courses_meta}', array());
     $DB->insert_records('block_custom_course_menu', $dataobjects1);
     $DB->insert_records('block_custom_course_menu_etc', $dataobjects2);
+    $DB->set_field('block_instances', 'blockname', 'custom_course_menu', array('blockname' => 'my_courses'));
     echo $OUTPUT->container('Transition Completed');
 } catch (Exception $e) {
     echo $OUTPUT->container('Transition has already occured');
