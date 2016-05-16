@@ -103,8 +103,8 @@ foreach ($categories as $category) {
     }
 
     $html .= "<li class='custom_course_menu_category $hiddenswitch'>$move$anchor {$category->name} $hide";
-    $html .= '<ul class="custom_course_menu_list ' . $hiddenswitch . ' ' . $collapsedcss . ($category->id === 'favs' ||
-                                                     $category->id === 'lastviewed' ? '' : $sortablecss) . '">';
+    $html .= '<ul class="custom_course_menu_list ' . $hiddenswitch . ' ' . $collapsedcss . ($category->id === -1 ||
+                                                     $category->id === -2 ? '' : $sortablecss) . '">';
     foreach ($category->courses as $course) {
         if (!$editing && $course->meta->hide) {
             continue;
@@ -141,20 +141,20 @@ foreach ($categories as $category) {
                 ));
             }
 
-            if ($category->id === 'lastviewed') {
-                $hide = $fav = '';
+            if ($category->id === -1) {
+                $hide = '';
                 $hiddenswitch = 'excluded_courses';
             }
 
-            if ($category->id === 'favs') {
-                $hide = '';
+            if ($category->id === -2) {
+                $hide = $fav = '';
                 $hiddenswitch = 'excluded_courses';
             }
         }
 
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
         $anchor = html_writer::link($url, $course->fullname, array('class' => $class));
-        $move = $category->id === "lastviewed" || $category->id === "favs" ? "" : $move;
+        $move =  $category->id === -1 || $category->id === -2 ? "" : $move;
         $content = "$move$courseicon $anchor $hide $fav";
         $html .= html_writer::tag('li', $content, array(
             'class' => "custom_course_menu_course $hiddenswitch",
@@ -295,7 +295,7 @@ function get_last_viewed() {
                 a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $lva)";
     } else { // Moodle 2.7+.
         $sql = "SELECT a.courseid, max(a.timecreated) as date, a.userid FROM (SELECT * FROM {logstore_standard_log} 
-				WHERE courseid !=0 and courseid !=1) as a WHERE a.userid='$USER->id' GROUP BY a.courseid ORDER BY date
+				WHERE courseid !=0 and courseid !=1) as a WHERE a.userid='$USER->id' GROUP BY a.userid,a.courseid ORDER BY date
 				DESC LIMIT $lva";
     }
 
@@ -305,24 +305,23 @@ function get_last_viewed() {
     $order = 1;
     foreach ($latestcourses as $latest) {
         if ($course = get_course($latest->courseid)) {
-            if (!isset($categories["lastviewed"])) {
-                $params = array('id' => "lastviewed");
+            if (!isset($categories[-2])) {
                 $category = new stdClass();
                 $category->name = "Last $lva Viewed";
-                $category->id = "lastviewed";
+                $category->id = -2;
                 $category->courses = array();
 
-                if (isset($categorymeta["lastviewed"])) {
-                    $category->meta = $categorymeta["lastviewed"];
+                if (isset($categorymeta[-2])) {
+                    $category->meta = $categorymeta[-2];
                 } else {
                     $category->meta = (object) array('hide' => 0, 'sortorder' => 1);
                 }
 				
-                $categories["lastviewed"] = $category;
+                $categories[-2] = $category;
             }
             $course->meta = (object) array('hide' => 0, 'sortorder' => $order);
             $order++;
-            $categories["lastviewed"]->courses[$course->id] = $course;
+            $categories[-2]->courses[$course->id] = $course;
         }
 
     }
@@ -344,20 +343,19 @@ function get_my_favorites() {
     $courses = $DB->get_records_sql($sql, array('userid' => $USER->id));
     $categories = array();
     foreach ($courses as $course) {
-        if (!isset($categories["favs"])) {
-            $params = array('id' => "favs");
+        if (!isset($categories[-1])) {
             $category = new stdClass();
             $category->name = "Favorites";
-            $category->id = "favs";
+            $category->id = -1;
             $category->courses = array();
 
-            if (isset($categorymeta["favs"])) {
-                $category->meta = $categorymeta["favs"];
+            if (isset($categorymeta[-1])) {
+                $category->meta = $categorymeta[-1];
             } else {
                 $category->meta = (object) array('hide' => 0, 'sortorder' => 0);
             }
 
-            $categories["favs"] = $category;
+            $categories[-1] = $category;
         }
 
         if (isset($coursemeta[$course->id])) {
@@ -368,7 +366,7 @@ function get_my_favorites() {
             $course->meta = (object) array('hide' => 0);
         }
 
-        $categories["favs"]->courses[$course->id] = $course;
+        $categories[-1]->courses[$course->id] = $course;
     }
 
     return $categories;
