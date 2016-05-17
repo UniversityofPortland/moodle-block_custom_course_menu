@@ -39,31 +39,6 @@ class block_custom_course_menu extends block_base {
     }
 
     /**
-     * Initalizes settings from settings.php
-     */
-    private function initSettings() {
-            global $DB;
-            //these should automatically be created when the block is installed.
-            //if they are not, they need to be configured.
-            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_enablefavorites'))) {
-                    $this->clientid = $DB->get_record('config', array('name' => 'block_custom_course_menu_enablefavorites'))->value;
-            }
-
-            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_enablelastviewed'))) {
-                    $this->clientsecret = $DB->get_record('config', array('name' => 'block_custom_course_menu_enablelastviewed'))->value;
-            }
-
-            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_lastviewedamount'))) {
-                    $this->prefix = $DB->get_record('config', array('name' => 'block_custom_course_menu_lastviewedamount'))->value;
-            }
-
-            if($DB->record_exists('config', array('name' => 'block_custom_course_menu_showsearch'))) {
-                    $this->base_url = $DB->get_record('config', array('name' => 'block_custom_course_menu_showsearch'))->value;
-            }
-
-    }
-
-    /**
      * required for settings.php
      * @see block_base::has_config()
      */
@@ -77,7 +52,7 @@ class block_custom_course_menu extends block_base {
      * @return stdClass the content
      */
     public function get_content() {
-        global $THEME, $CFG, $USER, $DB, $OUTPUT, $PAGE;
+        global $CFG, $USER, $OUTPUT, $PAGE;
 
         if ($this->content !== null) {
             return $this->content;
@@ -114,29 +89,38 @@ class block_custom_course_menu extends block_base {
                                          array("style" => "text-align:center;")));
         }
 
-        if(isset(get_config('block_custom_course_menu')->showsearch)) {
-	    $showsearch = get_config('block_custom_course_menu')->showsearch;
-	    if ($showsearch == 1 ||
-               ($showsearch == "admin" &&
-	       (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)))) {
-      	        $strsearchcourses = get_string("search");
-	        $searchurl = new moodle_url('/course/search.php');
-
-		$footer   .= html_writer::start_tag('form', array('id' => "coursesearch", 'action' => $searchurl, 'method' => 'get'));
-        	$footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
-	        $footer   .= html_writer::empty_tag('input', array('type' => 'text', 'name' => "search"));
-	        $footer   .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => $strsearchcourses));
-		$footer   .= html_writer::end_tag('fieldset');
-        	$footer   .= html_writer::end_tag('form');
+        if (isset(get_config('block_custom_course_menu')->showsearch)) {
+            $showsearch = get_config('block_custom_course_menu')->showsearch;
+            if ($showsearch == 1 ||
+                    ($showsearch == "admin" &&
+                        (is_siteadmin($USER->id) ||
+                            has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)
+                        )
+                    )
+               ) {
+                    $strsearchcourses = get_string("search");
+                    $searchurl = new moodle_url('/course/search.php');
+                    $footer   .= html_writer::start_tag('form', array('id' => "coursesearch",
+                                                                      'action' => $searchurl,
+                                                                      'method' => 'get'));
+                    $footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
+                    $footer   .= html_writer::empty_tag('input', array('type' => 'text',
+                                                                       'name' => "search"));
+                    $footer   .= html_writer::empty_tag('input', array('type' => 'submit',
+                                                                       'value' => $strsearchcourses));
+                    $footer   .= html_writer::end_tag('fieldset');
+                    $footer   .= html_writer::end_tag('form');
             }
-	}
+        }
 
         $this->content->footer = $footer;
 
         $courses = enrol_get_my_courses();
-        $hidelink = empty($courses) && empty($CFG->block_custom_course_menu_enablelastviewed) ? array("style" =>
-                                             "display:none;text-decoration:none") :
-                                             array("style" => "display:inline;text-decoration:none");
+        if (empty($courses) && empty($CFG->block_custom_course_menu_enablelastviewed)) {
+            $hidelink = array("style" => "display:none;text-decoration:none");
+        } else {
+            $hidelink = array("style" => "display:inline;text-decoration:none");
+        }
 
         $editicon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
         $interface = new moodle_url('/blocks/custom_course_menu/interface.php');

@@ -21,199 +21,197 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 (function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-		require(["jquery", "jqueryui"], factory );
-	} else {
-		factory( jQuery );
-	}
+    if ( typeof define === "function" && define.amd ) {
+        require.config({
+            waitSeconds: 30
+        });
+        require(["jquery", "jqueryui"], factory );
+    } else {
+        factory( jQuery );
+    }
 }(function( $ ) {
 
-  var interfaceUrl = $('#custom_course_menu_interface').attr('href');
-  var $container = $('#custom_course_menu_dynamic');
+    var interfaceUrl = $('#custom_course_menu_interface').attr('href');
+    var $container = $('#custom_course_menu_dynamic');
 
-  var saveSortsFor = function(type, $ul) {
-    var url = $('#custom_course_menu_sort').text();
-    var regex = new RegExp(type + "id=([\\w-]{1,25})");
+    var saveSortsFor = function(type, $ul) {
+        var url = $('#custom_course_menu_sort').text();
+        var regex = new RegExp(type + "id=([\\w-]{1,25})");
 
-    var ids = [];
-    var sortorder = [];
-    var sessionid = M.cfg.sesskey;
+        var ids = [];
+        var sortorder = [];
+        var sessionid = M.cfg.sesskey;
 
-    $ul.children().each(function(index, elem) {
-      var href = $(elem).find('.item_visibility').attr('href');
-      ids.push(regex.exec(href)[1]);
-      sortorder.push(index);
-    });
+        $ul.children().each(function(index, elem) {
+            var href = $(elem).find('.item_visibility').attr('href');
+            ids.push(regex.exec(href)[1]);
+            sortorder.push(index);
+        });
 
-     var params = {
-      type: type,
-      sesskey: sessionid,
-      ids: ids,
-      sortorder: sortorder.join(","),
+        var params = {
+            type: type,
+            sesskey: sessionid,
+            ids: ids,
+            sortorder: sortorder.join(","),
+        };
+
+        return $.ajax({
+            url: url,
+            data: params,
+            type: "POST",
+        });
     };
 
-    return $.ajax({
-      url: url,
-      data: params,
-      type: "POST",
-    });
-  };
-
-  var sortableObject = {
-    cursor: "move",
-    handle: ".handle",
-    axis: "y",
-    placeholder: "placeholder",
-    update: function(event, $ui) {
-      var $ul = $ui.item.parent();
-      var type = $ui.item.attr('class').match(/category/) ? 'category' : 'course';
-      saveSortsFor(type, $ul);
-    }
-  };
-
-  var categorySwitcher = function() {
-    var $this = $(this);
-    var $list = $this.siblings('.custom_course_menu_list');
-    var collapsed = $this.hasClass('minus');
-
-    if (collapsed) {
-      var toAdd = 'plus';
-      var toRemove = 'minus';
-      var listAdd = 'collapsed';
-      var listRemove = 'not_collapsed';
-    } else {
-      var toAdd = 'minus';
-      var toRemove = 'plus';
-      var listAdd = 'not_collapsed';
-      var listRemove = 'collapsed';
-    }
-
-    $this.removeClass(toRemove).addClass(toAdd);
-    $list.removeClass(listRemove).addClass(listAdd);
-    $this.html($('#custom_course_menu_' + toAdd).html());
-
-	var sessionid = M.cfg.sesskey;
-
-	var params = {
-      sesskey: sessionid,
+    var sortableObject = {
+        cursor: "move",
+        handle: ".handle",
+        axis: "y",
+        placeholder: "placeholder",
+        update: function(event, $ui) {
+            var $ul = $ui.item.parent();
+            var type = $ui.item.attr('class').match(/category/) ? 'category' : 'course';
+            saveSortsFor(type, $ul);
+        }
     };
 
-    $.ajax({
-      url: $this.attr('href'),
-      data: params,
-      type: "POST",
-    });
+    var categorySwitcher = function() {
+        var $this = $(this);
+        var $list = $this.siblings('.custom_course_menu_list');
+        var collapsed = $this.hasClass('minus');
 
-    return false;
-  };
+        if (collapsed) {
+            var toAdd = 'plus';
+            var toRemove = 'minus';
+            var listAdd = 'collapsed';
+            var listRemove = 'not_collapsed';
+        } else {
+            var toAdd = 'minus';
+            var toRemove = 'plus';
+            var listAdd = 'not_collapsed';
+            var listRemove = 'collapsed';
+        }
 
-  var itemVisibility = function() {
-    var $this = $(this);
-    var $parent = $this.parent();
-    var $list = $this.siblings('.custom_course_menu_list');
-    var hidden = $this.hasClass('inconspicuous');
+        $this.removeClass(toRemove).addClass(toAdd);
+        $list.removeClass(listRemove).addClass(listAdd);
+        $this.html($('#custom_course_menu_' + toAdd).html());
 
-    if (hidden) {
-      var toAdd = 'visible';
-      var toRemove = 'inconspicuous';
-    } else {
-      var toAdd = 'inconspicuous';
-      var toRemove = 'visible';
-    }
+        var sessionid = M.cfg.sesskey;
 
-    $this.removeClass(toRemove).addClass(toAdd);
-    $list.removeClass(toRemove).addClass(toAdd);
-    $parent.removeClass(toRemove).addClass(toAdd);
+        var params = {
+            sesskey: sessionid,
+        };
 
-    $this.html($('#custom_course_menu_' + toAdd).html());
-
-	var sessionid = M.cfg.sesskey;
-	
-	 var params = {
-      sesskey: sessionid,
-    };    
-
-    $.ajax({
-      url: $this.attr('href'),
-      data: params,
-      type: "POST",
-    });
-
-    return false;
-  };
-
-  var itemFavorite = function() {
-    var $this = $(this);
-	var sessionid = M.cfg.sesskey;
-	
-	 var params = {
-      sesskey: sessionid,
+        $.ajax({
+            url: $this.attr('href'),
+            data: params,
+            type: "POST",
+        });
+        return false;
     };
-	
-    $.ajax({
-      url: $this.attr('href'),
-      data: params,
-      type: "POST",
-    }).done(function() {
-        //refresh editing area
-        createInterface(true);
-    });
 
-    return false;
-  };
+    var itemVisibility = function() {
+        var $this = $(this);
+        var $parent = $this.parent();
+        var $list = $this.siblings('.custom_course_menu_list');
+        var hidden = $this.hasClass('inconspicuous');
 
-  var createInterface = function(editing) {
-  	var sessionid = M.cfg.sesskey;
-	
-	 var params = {
-	  editing: editing ? 1 : 0,
-      sesskey: sessionid,
+        if (hidden) {
+            var toAdd = 'visible';
+            var toRemove = 'inconspicuous';
+        } else {
+            var toAdd = 'inconspicuous';
+            var toRemove = 'visible';
+        }
+
+        $this.removeClass(toRemove).addClass(toAdd);
+        $list.removeClass(toRemove).addClass(toAdd);
+        $parent.removeClass(toRemove).addClass(toAdd);
+
+        $this.html($('#custom_course_menu_' + toAdd).html());
+
+        var sessionid = M.cfg.sesskey;
+
+        var params = {
+            sesskey: sessionid,
+        };
+
+        $.ajax({
+            url: $this.attr('href'),
+            data: params,
+            type: "POST",
+        });
+        return false;
     };
-    $.ajax({
-      url: interfaceUrl,
-      data: params, 
-    }).done(function(html) {
-      $container.html(html);
 
-      if (editing) {
-        $container.addClass('editing');
-      } else {
-        $container.removeClass('editing');
-      }
+    var createInterface = function(editing) {
+        var sessionid = M.cfg.sesskey;
+        var params = {
+            editing: editing ? 1 : 0,
+            sesskey: sessionid,
+        };
+        $.ajax({
+            url: interfaceUrl,
+            data: params,
+        }).done(function(html) {
+            $container.html(html);
+            if (editing) {
+                $container.addClass('editing');
+            } else {
+                $container.removeClass('editing');
+            }
 
-      if (html == 'You are not enrolled in any courses.') {
-        $('#custom_course_menu_interface').hide();
-      } else {
-        $('#custom_course_menu_interface').show();
-      }
+            if (html == 'You are not enrolled in any courses.') {
+                $('#custom_course_menu_interface').hide();
+            } else {
+                $('#custom_course_menu_interface').show();
+            }
 
-      if($('.course-sortable').length){ $('.course-sortable').sortable(sortableObject); }
-      $('.category_switcher').click(categorySwitcher);
-      $('.item_favorite').click(itemFavorite);
-      $('.item_visibility').click(itemVisibility);
+            if ($('.course-sortable').length) {
+                $('.course-sortable').sortable(sortableObject);
+            }
+            $('.category_switcher').click(categorySwitcher);
+            $('.item_favorite').click(itemFavorite);
+            $('.item_visibility').click(itemVisibility);
+        });
+    };
+
+    createInterface();
+
+    var itemFavorite = function() {
+        var $this = $(this);
+        var sessionid = M.cfg.sesskey;
+        var params = {
+            sesskey: sessionid,
+        };
+
+        $.ajax({
+            url: $this.attr('href'),
+            data: params,
+            type: "POST",
+        }).done(function() {
+            // Refresh editing area.
+            createInterface(true);
+        });
+        return false;
+    };
+
+    $('#custom_course_menu_interface').click(function() {
+        $container.html($('<span/>').addClass('interface').text('Loading...'));
+        createInterface(!$container.hasClass('editing'));
+        return false;
     });
-  };
 
-  createInterface();
+    $('#custom_course_menu_interface').mouseover(function() {
+        if ($container.hasClass('editing')) {
+            $(this).prepend("<span id='overtext'>Finish Editing </span>");
+        } else {
+            $(this).prepend("<span id='overtext'>Start Editing </span>");
+        }
+        return false;
+    });
 
-  $('#custom_course_menu_interface').click(function() {
-    $container.html($('<span/>').addClass('interface').text('Loading...'));
-
-    createInterface(!$container.hasClass('editing'));
-    return false;
-  });
-
-  $('#custom_course_menu_interface').mouseover(function() {
-    if ($container.hasClass('editing')) {
-      $(this).prepend("<span id='overtext'>Finish Editing </span>");
-    } else {
-      $(this).prepend("<span id='overtext'>Start Editing </span>");
-    }
-    return false;
-  });
-
-  $('#custom_course_menu_interface').mouseout(function() {
-    $('#overtext').remove();
-    return false;
-  });
+    $('#custom_course_menu_interface').mouseout(function() {
+        $('#overtext').remove();
+        return false;
+    });
 }));

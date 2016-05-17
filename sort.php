@@ -25,7 +25,7 @@ define('AJAX_SCRIPT', true);
 require_once('../../config.php');
 
 require_sesskey();
-if (!isloggedin() ){
+if (!isloggedin()) {
     die();
 }
 
@@ -35,11 +35,11 @@ $ids = required_param_array('ids', PARAM_INT);
 $sortorder = required_param('sortorder', PARAM_TEXT);
 $sortorder = explode(',', $sortorder);
 
-// Prepare parameters for furture sql query. 
-$ids = array_values($ids); 
-$params = array($type, $userid); 
-list($sqlidstest, $idsparams) = $DB->get_in_or_equal($ids); 
-$params = array_merge($params, $idsparams); 
+// Prepare parameters for furture sql query.
+$ids = array_values($ids);
+$params = array($type, $userid);
+list($sqlidstest, $idsparams) = $DB->get_in_or_equal($ids);
+$params = array_merge($params, $idsparams);
 $sqlidstest = ' AND itemid ' .$sqlidstest;
 
 $sql = 'SELECT itemid, id, item, sortorder, hide '
@@ -61,10 +61,9 @@ foreach ($ids as $index => $id) {
     $entry->userid = $userid;
     $entry->itemid = $id;
     $entry->sortorder = $sortorder[$index];
-		if (isset($entry->id)) {
-    		$DB->update_record('block_custom_course_menu_etc', $entry);
-    	} else {
-    		$DB->insert_record('block_custom_course_menu_etc', $entry);
-    	}
-    
+    if (isset($entry->id)) {
+        $DB->update_record('block_custom_course_menu_etc', $entry);
+    } else {
+        $DB->insert_record('block_custom_course_menu_etc', $entry);
+    }
 }

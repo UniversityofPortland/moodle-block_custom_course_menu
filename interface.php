@@ -154,7 +154,7 @@ foreach ($categories as $category) {
 
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
         $anchor = html_writer::link($url, $course->fullname, array('class' => $class));
-        $move =  $category->id === -1 || $category->id === -2 ? "" : $move;
+        $move = $category->id === -1 || $category->id === -2 ? "" : $move;
         $content = "$move$courseicon $anchor $hide $fav";
         $html .= html_writer::tag('li', $content, array(
             'class' => "custom_course_menu_course $hiddenswitch",
@@ -287,14 +287,13 @@ function sort_my_categories($categories) {
 function get_last_viewed() {
     global $CFG, $DB, $USER;
     $categorymeta = get_meta_for('category');
-    $coursemeta = get_meta_for('course');
     $lva = get_config('block_custom_course_menu')->lastviewedamount;
     if ($CFG->version < 2014051200) { // Moodle < 2.7.
         $sql = "SELECT * FROM {log} a INNER JOIN (SELECT c.*,course, MAX(time) as time FROM {log} l JOIN {course} c ON
                 c.id=l.course WHERE userid='$USER->id' AND course != 1 AND module='course' GROUP BY course) b ON
                 a.course = b.course AND a.time = b.time GROUP BY a.course ORDER BY b.time DESC LIMIT $lva)";
     } else { // Moodle 2.7+.
-        $sql = "SELECT a.courseid, max(a.timecreated) as date, a.userid FROM (SELECT * FROM {logstore_standard_log} 
+        $sql = "SELECT a.courseid, max(a.timecreated) as date, a.userid FROM (SELECT * FROM {logstore_standard_log}
 				WHERE courseid !=0 and courseid !=1) as a WHERE a.userid='$USER->id' GROUP BY a.userid,a.courseid ORDER BY date
 				DESC LIMIT $lva";
     }
@@ -316,16 +315,14 @@ function get_last_viewed() {
                 } else {
                     $category->meta = (object) array('hide' => 0, 'sortorder' => 1);
                 }
-				
+
                 $categories[-2] = $category;
             }
             $course->meta = (object) array('hide' => 0, 'sortorder' => $order);
             $order++;
             $categories[-2]->courses[$course->id] = $course;
         }
-
     }
-
     return $categories;
 }
 
@@ -335,7 +332,7 @@ function get_last_viewed() {
  * @return array
  */
 function get_my_favorites() {
-    global $CFG, $DB, $USER;
+    global $DB, $USER;
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
     $sql = "SELECT * FROM {course} c WHERE c.id IN (SELECT itemid FROM {block_custom_course_menu_etc} WHERE userid = :userid
