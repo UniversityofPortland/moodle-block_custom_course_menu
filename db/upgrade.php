@@ -21,33 +21,33 @@
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 function xmldb_block_custom_course_menu_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
-    /// Changes columns to integers to be postgres approved.
+    // Changes columns to integers to be postgres approved.
     if ($oldversion < 2016051600) {
         // The categoryid field should be an integer.  To change this, we will create a new field to hold the data.
         // The preexisting field will be renamed and the contents will be copied out.
         $table = new xmldb_table('block_custom_course_menu');
         $index = new xmldb_index('usercat', XMLDB_INDEX_UNIQUE, array('userid', 'categoryid'));
-        $orig_field = new xmldb_field('categoryid', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, 'userid');
-        $new_field = new xmldb_field('categoryid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, 0, 'userid');
+        $origfield = new xmldb_field('categoryid', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, 'userid');
+        $newfield = new xmldb_field('categoryid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, 0, 'userid');
 
         // Remove existing index.
         if ($dbman->index_exists($table, $index)) {
             $dbman->drop_index($table, $index);
         }
-        
+
         // Rename existing categoryid field.
-        if ($dbman->field_exists($table, $orig_field)) {
-            $dbman->rename_field($table, $orig_field, 'categoryid_depr');
+        if ($dbman->field_exists($table, $origfield)) {
+            $dbman->rename_field($table, $origfield, 'categoryid_depr');
         }
 
         // Create new categoryid field.
-        if (!$dbman->field_exists($table, $orig_field)) {
-            $dbman->add_field($table, $new_field);
+        if (!$dbman->field_exists($table, $origfield)) {
+            $dbman->add_field($table, $newfield);
         }
 
         // Copy data from old field to new field, checking that data is in integer form.
@@ -72,22 +72,22 @@ function xmldb_block_custom_course_menu_upgrade($oldversion) {
         // The preexisting field will be renamed and the contents will be copied out.
         $table = new xmldb_table('block_custom_course_menu_etc');
         $index = new xmldb_index('useiteitemid', XMLDB_INDEX_UNIQUE, array('userid', 'item', 'itemid'));
-        $orig_field = new xmldb_field('itemid', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, 'item');
-        $new_field = new xmldb_field('itemid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, 0, 'item');
+        $origfield = new xmldb_field('itemid', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, 'item');
+        $newfield = new xmldb_field('itemid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, 0, 'item');
 
         // Remove existing index.
         if ($dbman->index_exists($table, $index)) {
             $dbman->drop_index($table, $index);
         }
-        
+
         // Rename existing itemid field.
-        if ($dbman->field_exists($table, $orig_field)) {
-            $dbman->rename_field($table, $orig_field, 'itemid_depr');
+        if ($dbman->field_exists($table, $origfield)) {
+            $dbman->rename_field($table, $origfield, 'itemid_depr');
         }
 
         // Create new itemid field.
-        if (!$dbman->field_exists($table, $orig_field)) {
-            $dbman->add_field($table, $new_field);
+        if (!$dbman->field_exists($table, $origfield)) {
+            $dbman->add_field($table, $newfield);
         }
 
         // Copy data from old field to new field, checking that data is in integer form.
