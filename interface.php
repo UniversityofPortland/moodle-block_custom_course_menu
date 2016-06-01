@@ -303,7 +303,7 @@ function get_last_viewed() {
     $categories = array();
     $order = 1;
     foreach ($latestcourses as $latest) {
-        if ($course = get_course($latest->courseid)) {
+        if ($course = $DB->get_record('course', array('id' => $latest->courseid))) {
             if (!isset($categories[-2])) {
                 $category = new stdClass();
                 $category->name = "Last $lva Viewed";
