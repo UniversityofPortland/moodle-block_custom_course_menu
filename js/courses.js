@@ -27,6 +27,7 @@
         });
         require(["jquery", "jqueryui"], factory);
     } else {
+        /* eslint-env jquery */
         factory(jQuery);
     }
 }(function($) {
