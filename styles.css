@@ -16,7 +16,7 @@
     cursor: move;
 }
 .excluded_courses {
-    cursor: default !important;
+    cursor: default;
 }
 .block_custom_course_menu ul.course-sortable .placeholder {
     border: 1px dashed #cdcdcd;
@@ -108,7 +108,7 @@
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-disabled {
-    cursor: default !important;
+    cursor: default;
 }
 /* Icons
 ----------------------------------*/

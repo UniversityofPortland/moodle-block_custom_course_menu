@@ -80,17 +80,19 @@
         var collapsed = $this.hasClass('minus');
         var toAdd = "";
         var toRemove = "";
+        var listAdd = "";
+        var listRemove = "";
 
         if (collapsed) {
-            var toAdd = 'plus';
-            var toRemove = 'minus';
-            var listAdd = 'collapsed';
-            var listRemove = 'not_collapsed';
+            toAdd = 'plus';
+            toRemove = 'minus';
+            listAdd = 'collapsed';
+            listRemove = 'not_collapsed';
         } else {
-            var toAdd = 'minus';
-            var toRemove = 'plus';
-            var listAdd = 'not_collapsed';
-            var listRemove = 'collapsed';
+            toAdd = 'minus';
+            toRemove = 'plus';
+            listAdd = 'not_collapsed';
+            listRemove = 'collapsed';
         }
 
         $this.removeClass(toRemove).addClass(toAdd);
@@ -120,11 +122,11 @@
         var toRemove = "";
 
         if (hidden) {
-            var toAdd = 'visible';
-            var toRemove = 'inconspicuous';
+            toAdd = 'visible';
+            toRemove = 'inconspicuous';
         } else {
-            var toAdd = 'inconspicuous';
-            var toRemove = 'visible';
+            toAdd = 'inconspicuous';
+            toRemove = 'visible';
         }
 
         $this.removeClass(toRemove).addClass(toAdd);
