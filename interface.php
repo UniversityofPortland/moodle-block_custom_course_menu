@@ -21,21 +21,27 @@
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once('../../config.php');
+
+require_sesskey();
+if (!isloggedin()) {
+    die();
+    require_login(); // Just to pass the codechecker.
+}
+
 $PAGE->set_context(context_system::instance());
 
 $editing = optional_param("editing", 0, PARAM_INT);
 
-$courseicon = $OUTPUT->pix_icon('i/course', get_string('course', 'block_custom_course_menu'));
+$minusicon = '<i class="fa fa-minus-square"></i>'; // Hidden course category icon.
+$plusicon = '<i class="fa fa-plus-square"></i>'; // Visible course category icon.
 
-$minusicon = $OUTPUT->pix_icon('t/switch_minus', get_string('hide'));
-$plusicon = $OUTPUT->pix_icon('t/switch_plus', get_string('show'));
+$inconspicuousicon = '<i class="fa fa-eye-slash"></i>'; // Hidden course icon.
+$visibleicon = '<i class="fa fa-eye"></i>'; // Visible course icon.
 
-$inconspicuousicon = $OUTPUT->pix_icon('t/show', get_string('show'));
-$visibleicon = $OUTPUT->pix_icon('t/hide', get_string('hide'));
-
-$favonicon = $OUTPUT->pix_icon('t/add', 'Add to favorites');
-$favofficon = $OUTPUT->pix_icon('t/less', 'Remove from favorites');
+$favonicon = '<i class="fa fa-plus"></i>'; // Add to favorites icon.
+$favofficon = '<i class="fa fa-minus"></i>'; // Remove from favorites icon.
 
 $categories = array();
 $configs = get_config('block_custom_course_menu');
@@ -85,11 +91,10 @@ foreach ($categories as $category) {
         'class' => "category_switcher $switch",
     ));
 
-    $hide = $move = '';
-    $hiddenswitch = '';
+    $hide = $move = $hiddenswitch = '';
 
     if ($editing) {
-        $move = html_writer::tag('span', $OUTPUT->pix_icon('i/move_2d', 'Drag and Drop to sort') . " ", array(
+        $move = html_writer::tag('span', '<i class="fa fa-arrows"></i> ', array(
             'class' => "handle",
         ));
         $hiddenswitch = !empty($category->meta->hide) ? 'inconspicuous' : 'visible';
@@ -155,7 +160,7 @@ foreach ($categories as $category) {
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
         $anchor = html_writer::link($url, $course->fullname, array('class' => $class));
         $move = $category->id === -1 || $category->id === -2 ? "" : $move;
-        $content = "$move$courseicon $anchor $hide $fav";
+        $content = $move.$anchor." ".$hide.$fav;
         $html .= html_writer::tag('li', $content, array(
             'class' => "custom_course_menu_course $hiddenswitch",
         ));

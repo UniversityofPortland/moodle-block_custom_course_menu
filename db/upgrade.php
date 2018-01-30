@@ -22,6 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Upgrade scripts.
+ *
+ * @param int $oldversion current version.
+ * @return bool
+ */
 function xmldb_block_custom_course_menu_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
