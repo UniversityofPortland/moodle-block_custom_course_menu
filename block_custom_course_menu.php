@@ -22,8 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * Main content class
+ * block_custom_course_menu class.
  *
  * @package    block_custom_course_menu
  * @copyright  2015 onwards University of Portland (www.up.edu)
@@ -58,13 +60,8 @@ class block_custom_course_menu extends block_base {
             return $this->content;
         }
 
-        if ($CFG->version < 2015051101) { // If not using Moodle 2.9+.
-            $PAGE->requires->js('/blocks/custom_course_menu/js/jquery-1.9.1.min.js');
-            $PAGE->requires->js('/blocks/custom_course_menu/js/ui/js/jquery-ui-1.10.3.min.js');
-            $PAGE->requires->js('/blocks/custom_course_menu/js/courses.js');
-        } else { // If using Moodle 2.9+ use the requirejs version and built in jQuery and UI.
-            $PAGE->requires->js('/blocks/custom_course_menu/js/courses.js');
-        }
+        $PAGE->requires->jquery();
+        $PAGE->requires->js('/blocks/custom_course_menu/js/courses.js');
 
         $this->content = new stdClass;
         $this->content->footer = '&nbsp;';
@@ -98,7 +95,6 @@ class block_custom_course_menu extends block_base {
                         )
                     )
                ) {
-                    $strsearchcourses = get_string("search");
                     $searchurl = new moodle_url('/course/search.php');
                     $footer   .= html_writer::start_tag('form', array('id' => "coursesearch",
                                                                       'action' => $searchurl,
@@ -106,8 +102,9 @@ class block_custom_course_menu extends block_base {
                     $footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
                     $footer   .= html_writer::empty_tag('input', array('type' => 'text',
                                                                        'name' => "search"));
-                    $footer   .= html_writer::empty_tag('input', array('type' => 'submit',
-                                                                       'value' => $strsearchcourses));
+                    $footer   .= html_writer::link('javascript: coursesearch.submit()',
+                                                   '<i class="fa fa-search"></i>',
+                                                   array('id' => "searchbutton"));
                     $footer   .= html_writer::end_tag('fieldset');
                     $footer   .= html_writer::end_tag('form');
             }
@@ -116,13 +113,12 @@ class block_custom_course_menu extends block_base {
         $this->content->footer = $footer;
 
         $courses = enrol_get_my_courses();
+        $hidelink = array();
         if (empty($courses) && empty($CFG->block_custom_course_menu_enablelastviewed)) {
-            $hidelink = array("style" => "display:none;text-decoration:none");
-        } else {
-            $hidelink = array("style" => "display:inline;text-decoration:none");
+            $hidelink = array("class" => "hidden");
         }
 
-        $editicon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
+        $editicon = '<i class="fa fa-gear"></i>';
         $interface = new moodle_url('/blocks/custom_course_menu/interface.php');
         $this->content->footer .= html_writer::link($interface,
                                                     $editicon,

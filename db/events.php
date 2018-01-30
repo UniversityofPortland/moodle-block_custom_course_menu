@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 if ($CFG->version < 2015111600) { // If not using Moodle 3.0+.
     $mapper = function($event) {
         return array(
