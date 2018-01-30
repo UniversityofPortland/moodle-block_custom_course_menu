@@ -20,16 +20,16 @@
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-(function( factory ) {
-    if ( typeof define === "function" && define.amd ) {
+(function(factory) {
+    if (typeof define === "function" && define.amd) {
         require.config({
             waitSeconds: 30
         });
-        require(["jquery", "jqueryui"], factory );
+        require(["jquery", "jqueryui"], factory);
     } else {
-        factory( jQuery );
+        factory(jQuery);
     }
-}(function( $ ) {
+}(function($) {
 
     var interfaceUrl = $('#custom_course_menu_interface').attr('href');
     var $container = $('#custom_course_menu_dynamic');
@@ -78,6 +78,8 @@
         var $this = $(this);
         var $list = $this.siblings('.custom_course_menu_list');
         var collapsed = $this.hasClass('minus');
+        var toAdd = "";
+        var toRemove = "";
 
         if (collapsed) {
             var toAdd = 'plus';
@@ -114,6 +116,8 @@
         var $parent = $this.parent();
         var $list = $this.siblings('.custom_course_menu_list');
         var hidden = $this.hasClass('inconspicuous');
+        var toAdd = "";
+        var toRemove = "";
 
         if (hidden) {
             var toAdd = 'visible';
