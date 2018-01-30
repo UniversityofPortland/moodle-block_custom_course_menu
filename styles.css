@@ -4,7 +4,7 @@
     text-decoration: none;
 }
 .block_custom_course_menu ul.custom_course_menu_category_list {
-    padding-left: 0px;
+    padding-left: 0;
     margin: 0;
     list-style: none;
 }
@@ -34,7 +34,7 @@
     text-decoration: line-through;
 }
 .block_custom_course_menu ul.custom_course_menu_category_list ul {
-    padding-left: 0px;
+    padding-left: 0;
     margin-left: 1em;
     margin-top: 0;
     margin-bottom: 0;
@@ -100,7 +100,7 @@
     left: 0;
     position: absolute;
     opacity: 0;
-    filter:Alpha(Opacity=0);
+    filter: alpha(Opacity=0);
 }
 .ui-front {
     z-index: 100;
