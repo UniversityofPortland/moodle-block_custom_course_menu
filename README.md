@@ -16,7 +16,7 @@ students and teachers.
 
 ## Requirements
 
-- Moodle 2.1+
+- Moodle 3.3+
 
 ## Installation
 
