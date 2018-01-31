@@ -36,7 +36,7 @@
 }
 .block_custom_course_menu ul.custom_course_menu_category_list ul {
     padding-left: 0;
-    margin-left: 1em;
+    margin-left: 0;
     margin-top: 0;
     margin-bottom: 0;
     list-style: none;
@@ -68,7 +68,6 @@
 .block_custom_course_menu .editing .scrollable {
     max-width: 75%;
 }
-
 .block_custom_course_menu .scrollable span {
     left: 0%;
     width: 100%;
