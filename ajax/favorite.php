@@ -23,7 +23,7 @@
  */
 
 define('AJAX_SCRIPT', true);
-require_once('../../config.php');
+require_once('../../../config.php');
 
 require_sesskey();
 if (!isloggedin()) {
@@ -33,19 +33,15 @@ if (!isloggedin()) {
 
 $userid = $USER->id;
 $courseid = optional_param('courseid', null, PARAM_INT);
-$categoryid = optional_param('categoryid', null, PARAM_NOTAGS);
 
-if ((empty($courseid) && empty($categoryid)) || empty($userid)) {
+if ((empty($courseid) && empty($userid))) {
     die();
 }
 
-$itemid = $courseid;
-$item = 'course';
-
 $params = array(
     'userid' => $userid,
-    'item' => $item,
-    'itemid' => $itemid,
+    'item' => 'course',
+    'itemid' => $courseid,
 );
 
 $entry = $DB->get_record('block_custom_course_menu_etc', $params);
@@ -58,3 +54,4 @@ if ($entry) {
     $entry->fav = 1;
     $DB->insert_record('block_custom_course_menu_etc', $entry);
 }
+echo json_encode(array(true));

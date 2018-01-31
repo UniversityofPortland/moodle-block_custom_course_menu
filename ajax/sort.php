@@ -23,7 +23,7 @@
  */
 
 define('AJAX_SCRIPT', true);
-require_once('../../config.php');
+require_once('../../../config.php');
 
 require_sesskey();
 if (!isloggedin()) {
@@ -69,3 +69,4 @@ foreach ($ids as $index => $id) {
         $DB->insert_record('block_custom_course_menu_etc', $entry);
     }
 }
+echo json_encode(array(true));
