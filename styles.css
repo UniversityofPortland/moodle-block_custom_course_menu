@@ -30,7 +30,7 @@
     list-style: none;
     font-weight: bold;
 }
-.block_custom_course_menu ul.custom_course_menu_category_list li.inconspicuous 
+.block_custom_course_menu ul.custom_course_menu_category_list li.inconspicuous
 .courselist_course span {
     text-decoration: line-through;
 }
@@ -66,7 +66,7 @@
     overflow: hidden;
 }
 .block_custom_course_menu .editing .scrollable {
-    max-width: 75% !important;
+    max-width: 75%;
 }
 
 .block_custom_course_menu .scrollable span {
@@ -80,7 +80,7 @@
     transition-delay: 1s;
 }
 .block_custom_course_menu .scrollable span:hover {
-    left: -100% !important;
+    left: -100%;
 }
 .block_custom_course_menu .searchfield {
     margin: 0;
