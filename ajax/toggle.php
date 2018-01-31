@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CustomCourseMenu Block Helper - Visible
+ * CustomCourseMenu Block Helper - Toggle
  *
  * @package    block_custom_course_menu
  * @copyright  2015 onwards University of Portland (www.up.edu)
@@ -23,7 +23,7 @@
  */
 
 define('AJAX_SCRIPT', true);
-require_once('../../config.php');
+require_once('../../../config.php');
 
 require_sesskey();
 if (!isloggedin()) {
@@ -31,36 +31,26 @@ if (!isloggedin()) {
     require_login(); // Just to pass the codechecker.
 }
 
+$catid = required_param('categoryid', PARAM_NOTAGS);
 $userid = $USER->id;
-$courseid = optional_param('courseid', null, PARAM_INT);
-$categoryid = optional_param('categoryid', null, PARAM_NOTAGS);
-
-if (empty($courseid) && empty($categoryid)) {
-    die();
-}
-
-if ($categoryid) {
-    $itemid = $categoryid;
-    $item = 'category';
-} else {
-    $itemid = $courseid;
-    $item = 'course';
-}
 
 $params = array(
-    'userid' => $userid,
-    'item' => $item,
-    'itemid' => $itemid,
+  'userid' => $userid,
+  'categoryid' => $catid
 );
 
-$entry = $DB->get_record('block_custom_course_menu_etc', $params);
+$entry = $DB->get_record('block_custom_course_menu', $params);
 
 if ($entry) {
-    $entry->hide = $entry->hide ? 0 : 1;
-    $DB->update_record('block_custom_course_menu_etc', $entry);
-} else {
-    $entry = (object) $params;
-    $entry->hide = 1;
+    $entry->collapsed = $entry->collapsed ? 0 : 1;
 
-    $DB->insert_record('block_custom_course_menu_etc', $entry);
+    $DB->update_record('block_custom_course_menu', $entry);
+} else {
+    $entry = new stdClass;
+    $entry->userid = $userid;
+    $entry->categoryid = $catid;
+    $entry->collapsed = 1;
+
+    $DB->insert_record('block_custom_course_menu', $entry);
 }
+echo json_encode(array(true));

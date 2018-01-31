@@ -83,28 +83,29 @@ class block_custom_course_menu extends block_base {
         if (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)) {
             $url = new moodle_url('/course/index.php');
             $footer .= html_writer::link($url, html_writer::tag('div', get_string('fulllistofcourses') . '...',
-                                         array("style" => "text-align:center;")));
+                                         array('style' => 'text-align:center;')));
         }
 
         if (isset(get_config('block_custom_course_menu')->showsearch)) {
             $showsearch = get_config('block_custom_course_menu')->showsearch;
             if ($showsearch == 1 ||
-                    ($showsearch == "admin" &&
+                    ($showsearch == 'admin' &&
                         (is_siteadmin($USER->id) ||
                             has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)
                         )
                     )
                ) {
                     $searchurl = new moodle_url('/course/search.php');
-                    $footer   .= html_writer::start_tag('form', array('id' => "coursesearch",
+                    $footer   .= html_writer::start_tag('form', array('id' => 'coursesearch',
                                                                       'action' => $searchurl,
                                                                       'method' => 'get'));
-                    $footer   .= html_writer::start_tag('fieldset', array('class' => "coursesearchbox"));
+                    $footer   .= html_writer::start_tag('fieldset', array('class' => 'coursesearchbox'));
                     $footer   .= html_writer::empty_tag('input', array('type' => 'text',
-                                                                       'name' => "search"));
+                                                                       'name' => 'search',
+                                                                       'class' => 'searchfield'));
                     $footer   .= html_writer::link('javascript: coursesearch.submit()',
                                                    '<i class="fa fa-search"></i>',
-                                                   array('id' => "searchbutton"));
+                                                   array('id' => 'searchbutton'));
                     $footer   .= html_writer::end_tag('fieldset');
                     $footer   .= html_writer::end_tag('form');
             }
@@ -115,7 +116,7 @@ class block_custom_course_menu extends block_base {
         $courses = enrol_get_my_courses();
         $hidelink = array();
         if (empty($courses) && empty($CFG->block_custom_course_menu_enablelastviewed)) {
-            $hidelink = array("class" => "hidden");
+            $hidelink = array('class' => 'hidden');
         }
 
         $editicon = '<i class="fa fa-gear"></i>';
@@ -123,7 +124,7 @@ class block_custom_course_menu extends block_base {
         $this->content->footer .= html_writer::link($interface,
                                                     $editicon,
                                                     array_merge(array('id' => 'custom_course_menu_interface'), $hidelink));
-        $this->content->footer .= html_writer::tag('div', '', array("style" => "clear:both;"));
+        $this->content->footer .= html_writer::tag('div', '', array('style' => 'clear:both;'));
         $this->content->text = $html;
 
         return $this->content;

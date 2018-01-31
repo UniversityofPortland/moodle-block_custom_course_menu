@@ -32,7 +32,7 @@ if (!isloggedin()) {
 
 $PAGE->set_context(context_system::instance());
 
-$editing = optional_param("editing", 0, PARAM_INT);
+$editing = optional_param('editing', 0, PARAM_INT);
 
 $minusicon = '<i class="fa fa-minus-square"></i>'; // Hidden course category icon.
 $plusicon = '<i class="fa fa-plus-square"></i>'; // Visible course category icon.
@@ -86,7 +86,7 @@ foreach ($categories as $category) {
     $switch = $collapsed ? 'plus' : 'minus';
     $switchicon = ${$switch . 'icon'};
 
-    $url = new moodle_url('/blocks/custom_course_menu/toggle.php', $params);
+    $url = new moodle_url('/blocks/custom_course_menu/ajax/toggle.php', $params);
     $anchor = html_writer::link($url, $switchicon, array(
         'class' => "category_switcher $switch",
     ));
@@ -100,7 +100,7 @@ foreach ($categories as $category) {
         $hiddenswitch = !empty($category->meta->hide) ? 'inconspicuous' : 'visible';
         $switchicon = ${$hiddenswitch . 'icon'};
 
-        $url = new moodle_url('/blocks/custom_course_menu/visible.php', $params);
+        $url = new moodle_url('/blocks/custom_course_menu/ajax/visible.php', $params);
         $hide = html_writer::link($url, $switchicon, array(
             'class' => "item_visibility $hiddenswitch",
         ));
@@ -115,11 +115,9 @@ foreach ($categories as $category) {
             continue;
         }
 
-        $class = !$course->visible ? 'dimmed' : '';
-
         $hide = $fav = $hiddenswitch = $favswitch = '';
         if ($editing) {
-            $url = new moodle_url('/blocks/custom_course_menu/visible.php', array(
+            $url = new moodle_url('/blocks/custom_course_menu/ajax/visible.php', array(
                 'userid' => $USER->id,
                 'courseid' => $course->id,
             ));
@@ -132,7 +130,7 @@ foreach ($categories as $category) {
             ));
             $hide .= ' ';
 
-            $url = new moodle_url('/blocks/custom_course_menu/favorite.php', array(
+            $url = new moodle_url('/blocks/custom_course_menu/ajax/favorite.php', array(
                 'userid' => $USER->id,
                 'courseid' => $course->id,
             ));
@@ -157,10 +155,16 @@ foreach ($categories as $category) {
             }
         }
 
+        $class = 'courselist_course';
+        $class .= !$course->visible ? ' dimmed' : '';
+        $class .= strlen($course->fullname) >= 22 ? ' scrollable' : '';
+
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
-        $anchor = html_writer::link($url, $course->fullname, array('class' => $class));
-        $move = $category->id === -1 || $category->id === -2 ? "" : $move;
-        $content = $move.$anchor." ".$hide.$fav;
+        $anchor = html_writer::link($url,
+                                    html_writer::tag('span', $course->fullname),
+                                    array('class' => $class));
+        $move = $category->id === -1 || $category->id === -2 ? '' : $move;
+        $content = $move.$anchor.' '.$hide.$fav;
         $html .= html_writer::tag('li', $content, array(
             'class' => "custom_course_menu_course $hiddenswitch",
         ));
@@ -170,7 +174,7 @@ foreach ($categories as $category) {
     $html .= '</li>';
 }
 
-$url = new moodle_url('/blocks/custom_course_menu/sort.php', array(
+$url = new moodle_url('/blocks/custom_course_menu/ajax/sort.php', array(
     'userid' => $USER->id,
 ));
 
