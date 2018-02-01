@@ -107,7 +107,7 @@ foreach ($categories as $category) {
         $hide .= ' ';
     }
 
-    $catclass .= strlen($category->name) >= 24 ? 'scrollable' : '';
+    $catclass = strlen($category->name) >= 24 ? 'scrollable' : '';
     $categoryname = html_writer::tag('span',
                                      html_writer::tag('span', $category->name),
                                      array('class' => $catclass));
