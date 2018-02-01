@@ -1,6 +1,6 @@
 .block_custom_course_menu #custom_course_menu_interface {
     float: right;
-    margin: 5px;
+    margin: -10px 5px;
     text-decoration: none;
 }
 .block_custom_course_menu ul.custom_course_menu_category_list {
@@ -65,6 +65,9 @@
     vertical-align: middle;
     overflow: hidden;
 }
+.block_custom_course_menu span.scrollable {
+    max-width: 90%;
+}
 .block_custom_course_menu .editing .scrollable {
     max-width: 75%;
 }
@@ -72,11 +75,11 @@
     left: 0%;
     width: 100%;
     position: relative;
-    -webkit-transition: left 3s, width 3s;
-    -moz-transition: left 3s, width 3s;
-    transition: left 3s, width 3s;
-    -webkit-transition-delay: 1s; /* Safari */
-    transition-delay: 1s;
+    -webkit-transition: left 5s, width 5s;
+    -moz-transition: left 5s, width 5s;
+    transition: left 5s, width 5s;
+    -webkit-transition-delay: 2s; /* Safari */
+    transition-delay: 2s;
 }
 .block_custom_course_menu .scrollable span:hover {
     left: -100%;

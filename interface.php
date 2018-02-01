@@ -94,7 +94,7 @@ foreach ($categories as $category) {
     $hide = $move = $hiddenswitch = '';
 
     if ($editing) {
-        $move = html_writer::tag('span', '<i class="fa fa-arrows"></i> ', array(
+        $move = html_writer::tag('span', '<i class="fa fa-arrows"></i>', array(
             'class' => "handle",
         ));
         $hiddenswitch = !empty($category->meta->hide) ? 'inconspicuous' : 'visible';
@@ -107,7 +107,11 @@ foreach ($categories as $category) {
         $hide .= ' ';
     }
 
-    $html .= "<li class='custom_course_menu_category $hiddenswitch'>$move$anchor {$category->name} $hide";
+    $catclass .= strlen($category->name) >= 24 ? 'scrollable' : '';
+    $categoryname = html_writer::tag('span',
+                                     html_writer::tag('span', $category->name),
+                                     array('class' => $catclass));
+    $html .= "<li class='custom_course_menu_category $hiddenswitch'>$move $anchor $categoryname $hide";
     $html .= '<ul class="custom_course_menu_list ' . $hiddenswitch . ' ' . $collapsedcss . ($category->id === -1 ||
                                                      $category->id === -2 ? '' : $sortablecss) . '">';
     foreach ($category->courses as $course) {
@@ -164,7 +168,7 @@ foreach ($categories as $category) {
                                     html_writer::tag('span', $course->fullname),
                                     array('class' => $class));
         $move = $category->id === -1 || $category->id === -2 ? '' : $move;
-        $content = $move.$anchor.' '.$hide.$fav;
+        $content = "$move $anchor ".$hide.$fav;
         $html .= html_writer::tag('li', $content, array(
             'class' => "custom_course_menu_course $hiddenswitch",
         ));

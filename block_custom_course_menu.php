@@ -121,11 +121,11 @@ class block_custom_course_menu extends block_base {
 
         $editicon = '<i class="fa fa-gear"></i>';
         $interface = new moodle_url('/blocks/custom_course_menu/interface.php');
-        $this->content->footer .= html_writer::link($interface,
-                                                    $editicon,
-                                                    array_merge(array('id' => 'custom_course_menu_interface'), $hidelink));
-        $this->content->footer .= html_writer::tag('div', '', array('style' => 'clear:both;'));
-        $this->content->text = $html;
+        $this->content->text = html_writer::link($interface,
+                                                 $editicon,
+                                                 array_merge(array('id' => 'custom_course_menu_interface'), $hidelink));
+        $this->content->text .= html_writer::tag('div', '', array('style' => 'clear:both;'));
+        $this->content->text .= $html;
 
         return $this->content;
     }
