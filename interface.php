@@ -57,7 +57,7 @@ if (!empty($configs->enablelastviewed)) {
 $categories = array_merge($categories, get_category_tree());
 
 if (empty($categories)) {
-    echo "You are not enrolled in any courses.";
+    echo get_string('nocourses', 'block_custom_course_menu');
     die();
 }
 
@@ -102,7 +102,7 @@ foreach ($categories as $category) {
 
         $url = new moodle_url('/blocks/custom_course_menu/ajax/visible.php', $params);
         $hide = html_writer::link($url, $switchicon, array(
-            'class' => "item_visibility $hiddenswitch",
+            'class' => "item_tool item_visibility $hiddenswitch",
         ));
         $hide .= ' ';
     }
@@ -112,8 +112,9 @@ foreach ($categories as $category) {
                                      html_writer::tag('span', $category->name),
                                      array('class' => $catclass));
     $html .= "<li class='custom_course_menu_category $hiddenswitch'>$move $anchor $categoryname $hide";
-    $html .= '<ul class="custom_course_menu_list ' . $hiddenswitch . ' ' . $collapsedcss . ($category->id === -1 ||
-                                                     $category->id === -2 ? '' : $sortablecss) . '">';
+    $html .= '<ul class="custom_course_menu_list ' . $hiddenswitch . ' ' .
+                                                     $collapsedcss .
+                                                     ($category->id === -2 ? '' : $sortablecss) . '">';
     foreach ($category->courses as $course) {
         if (!$editing && $course->meta->hide) {
             continue;
@@ -130,7 +131,7 @@ foreach ($categories as $category) {
             $switchicon = ${$hiddenswitch . 'icon'};
 
             $hide = html_writer::link($url, $switchicon, array(
-                'class' => "item_visibility $hiddenswitch",
+                'class' => "item_tool item_visibility $hiddenswitch",
             ));
             $hide .= ' ';
 
@@ -144,13 +145,13 @@ foreach ($categories as $category) {
                 $switchicon = ${$favswitch . 'icon'};
 
                 $fav = html_writer::link($url, $switchicon, array(
-                    'class' => "item_favorite $favswitch",
+                    'class' => "item_tool item_favorite $favswitch",
                 ));
             }
 
             if ($category->id === -1) {
                 $hide = '';
-                $hiddenswitch = 'excluded_courses';
+                $hiddenswitch = 'favorite_courses';
             }
 
             if ($category->id === -2) {
@@ -167,7 +168,7 @@ foreach ($categories as $category) {
         $anchor = html_writer::link($url,
                                     html_writer::tag('span', $course->fullname),
                                     array('class' => $class));
-        $move = $category->id === -1 || $category->id === -2 ? '' : $move;
+        $move = $category->id === -2 ? '' : $move;
         $content = "$move $anchor ".$hide.$fav;
         $html .= html_writer::tag('li', $content, array(
             'class' => "custom_course_menu_course $hiddenswitch",
@@ -319,7 +320,7 @@ function get_last_viewed() {
         if ($course = $DB->get_record('course', array('id' => $latest->courseid))) {
             if (!isset($categories[-2])) {
                 $category = new stdClass();
-                $category->name = "Last $lva Viewed";
+                $category->name = get_string('lastxviewed', 'block_custom_course_menu', $lva);
                 $category->id = -2;
                 $category->courses = array();
 
@@ -346,16 +347,30 @@ function get_last_viewed() {
  */
 function get_my_favorites() {
     global $DB, $USER;
+
+    // Cleanup favorites.
+    $rs = $DB->get_recordset('block_custom_course_menu_etc', array("userid" => $USER->id, "fav" => 1));
+    foreach ($rs as $record) {
+        $params = array(
+            'userid' => $record->userid,
+            'itemid' => $record->itemid
+        );
+        if (!is_enrolled(context_course::instance($record->itemid), $USER)) {
+            $DB->delete_records('block_custom_course_menu_etc', $params);
+        }
+    }
+    $rs->close(); // Don't forget to close the recordset!
+
     $categorymeta = get_meta_for('category');
-    $coursemeta = get_meta_for('course');
-    $sql = "SELECT * FROM {course} c WHERE c.id IN (SELECT itemid FROM {block_custom_course_menu_etc} WHERE userid = :userid
-            AND fav = 1) ORDER BY c.fullname";
-    $courses = $DB->get_records_sql($sql, array('userid' => $USER->id));
+    $coursemeta = get_meta_for('favorite', 1);
+    $sql = "SELECT c.* FROM {course} c JOIN {block_custom_course_menu_etc} s ON s.itemid = c.id WHERE s.userid = :userid
+            AND s.item = :fav ORDER BY s.sortorder";
+    $courses = $DB->get_records_sql($sql, array('userid' => $USER->id, 'fav' => "favorite"));
     $categories = array();
     foreach ($courses as $course) {
         if (!isset($categories[-1])) {
             $category = new stdClass();
-            $category->name = "Favorites";
+            $category->name = get_string('favorites', 'block_custom_course_menu');
             $category->id = -1;
             $category->courses = array();
 
@@ -370,7 +385,6 @@ function get_my_favorites() {
 
         if (isset($coursemeta[$course->id])) {
             $meta = $coursemeta[$course->id];
-            unset($meta->sortorder);
             $course->meta = $meta;
         } else {
             $course->meta = (object) array('hide' => 0);

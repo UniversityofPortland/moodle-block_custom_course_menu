@@ -60,6 +60,9 @@ class block_custom_course_menu extends block_base {
             return $this->content;
         }
 
+        $PAGE->requires->string_for_js('loading', 'block_custom_course_menu');
+        $PAGE->requires->string_for_js('editingon', 'block_custom_course_menu');
+        $PAGE->requires->string_for_js('editingoff', 'block_custom_course_menu');
         $PAGE->requires->jquery();
         $PAGE->requires->js('/blocks/custom_course_menu/js/courses.js');
 
@@ -76,7 +79,7 @@ class block_custom_course_menu extends block_base {
 
         $html = '<div id="custom_course_menu_application">'
               . '<div id="custom_course_menu_dynamic">'
-              . '<span class="interface">Loading...</span>'
+              . '<span class="interface">' . get_string('loading', 'block_custom_course_menu') . '</span>'
               . '</div></div>';
 
         $footer = "";

@@ -44,10 +44,12 @@
         var sessionid = M.cfg.sesskey;
 
         $ul.children().each(function(index, elem) {
-            var href = $(elem).find('.item_visibility').attr('href');
+            var href = $(elem).find('.item_tool').attr('href');
             ids.push(regex.exec(href)[1]);
             sortorder.push(index);
         });
+
+        type = type == 'course' && $ul.find('.favorite_courses').length ? 'favorite' : type;
 
         var params = {
             type: type,
@@ -203,16 +205,19 @@
     };
 
     $('#custom_course_menu_interface').click(function() {
-        $container.html($('<span/>').addClass('interface').text('Loading...'));
+        var loading = M.util.get_string('loading', 'block_custom_course_menu');
+        $container.html($('<span/>').addClass('interface').text(loading));
         createInterface(!$container.hasClass('editing'));
         return false;
     });
 
     $('#custom_course_menu_interface').mouseover(function() {
         if ($container.hasClass('editing')) {
-            $(this).prepend("<span id='overtext'>Finish Editing </span>");
+            var editingon = M.util.get_string('editingon', 'block_custom_course_menu');
+            $(this).prepend("<span id='overtext'>" + editingon + "</span>");
         } else {
-            $(this).prepend("<span id='overtext'>Start Editing </span>");
+            var editingoff = M.util.get_string('editingoff', 'block_custom_course_menu');
+            $(this).prepend("<span id='overtext'>" + editingoff + "</span>");
         }
         return false;
     });
