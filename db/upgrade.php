@@ -120,5 +120,26 @@ function xmldb_block_custom_course_menu_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2016051600, 'custom_course_menu');
     }
 
+    // Changes to favorite storage.
+    if ($oldversion < 2018030700) {
+        $rs = $DB->get_recordset('block_custom_course_menu_etc', array("fav" => 1));
+        foreach ($rs as $record) {
+            $params = array(
+                'userid' => $record->userid,
+                'item' => 'favorite',
+                'itemid' => $record->itemid,
+                'sortorder' => 0,
+                'fav' => 1
+            );
+
+            $entry = (object) $params;
+            $DB->insert_record('block_custom_course_menu_etc', $entry);
+        }
+        $rs->close(); // Don't forget to close the recordset!
+
+        // Custom_course_menu savepoint reached.
+        upgrade_block_savepoint(true, 2018030700, 'custom_course_menu');
+    }
+
     return true;
 }

@@ -42,16 +42,29 @@ $params = array(
     'userid' => $userid,
     'item' => 'course',
     'itemid' => $courseid,
+    'fav' => 1
 );
 
 $entry = $DB->get_record('block_custom_course_menu_etc', $params);
 
 if ($entry) {
-    $entry->fav = $entry->fav ? 0 : 1;
+    $entry->fav = 0;
     $DB->update_record('block_custom_course_menu_etc', $entry);
+
+    $params["item"] = 'favorite';
+    $DB->delete_records('block_custom_course_menu_etc', $params);
 } else {
     $entry = (object) $params;
-    $entry->fav = 1;
+    $params["fav"] = 0;
+    if ($newentry = $DB->get_record('block_custom_course_menu_etc', $params)) {
+        $newentry->fav = 1;
+        $DB->update_record('block_custom_course_menu_etc', $newentry);
+    } else {
+        $DB->insert_record('block_custom_course_menu_etc', $entry);
+    }
+
+    $entry->item = 'favorite';
+    $entry->sortorder = 0;
     $DB->insert_record('block_custom_course_menu_etc', $entry);
 }
 echo json_encode(array(true));
