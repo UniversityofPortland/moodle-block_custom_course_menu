@@ -57,7 +57,7 @@ if (!empty($configs->enablelastviewed)) {
 $categories = array_merge($categories, get_category_tree());
 
 if (empty($categories)) {
-    echo "You are not enrolled in any courses.";
+    echo get_string('nocourses', 'block_custom_course_menu');
     die();
 }
 
@@ -320,7 +320,7 @@ function get_last_viewed() {
         if ($course = $DB->get_record('course', array('id' => $latest->courseid))) {
             if (!isset($categories[-2])) {
                 $category = new stdClass();
-                $category->name = "Last $lva Viewed";
+                $category->name = get_string('lastxviewed', 'block_custom_course_menu', $lva);
                 $category->id = -2;
                 $category->courses = array();
 
@@ -370,7 +370,7 @@ function get_my_favorites() {
     foreach ($courses as $course) {
         if (!isset($categories[-1])) {
             $category = new stdClass();
-            $category->name = "Favorites";
+            $category->name = get_string('favorites', 'block_custom_course_menu');
             $category->id = -1;
             $category->courses = array();
 
