@@ -56,6 +56,11 @@ class observers {
             'item' => 'course',
             'itemid' => $event->courseid,
         ));
+
+        $DB->delete_records('block_custom_course_menu_etc', array(
+            'item' => 'favorite',
+            'itemid' => $event->courseid,
+        ));
     }
 
     /**

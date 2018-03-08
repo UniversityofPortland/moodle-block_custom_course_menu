@@ -44,10 +44,12 @@
         var sessionid = M.cfg.sesskey;
 
         $ul.children().each(function(index, elem) {
-            var href = $(elem).find('.item_visibility').attr('href');
+            var href = $(elem).find('.item_tool').attr('href');
             ids.push(regex.exec(href)[1]);
             sortorder.push(index);
         });
+
+        type = type == 'course' && $ul.find('.favorite_courses').length ? 'favorite' : type;
 
         var params = {
             type: type,
