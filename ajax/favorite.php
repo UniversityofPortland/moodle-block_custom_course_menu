@@ -47,24 +47,36 @@ $params = array(
 
 $entry = $DB->get_record('block_custom_course_menu_etc', $params);
 
-if ($entry) {
+if ($entry) { // Favorite "course" row exists, remove as favorite.
     $entry->fav = 0;
     $DB->update_record('block_custom_course_menu_etc', $entry);
 
-    $params["item"] = 'favorite';
+    $params = array(
+        'userid' => $userid,
+        'item' => 'favorite',
+        'itemid' => $courseid
+    );
     $DB->delete_records('block_custom_course_menu_etc', $params);
-} else {
+} else { // Favorite "course" does not exist, add as favorite.
     $entry = (object) $params;
+    // Does a "course" record exist already?
     $params["fav"] = 0;
     if ($newentry = $DB->get_record('block_custom_course_menu_etc', $params)) {
+        // Update existing record.
         $newentry->fav = 1;
         $DB->update_record('block_custom_course_menu_etc', $newentry);
     } else {
         $DB->insert_record('block_custom_course_menu_etc', $entry);
     }
 
-    $entry->item = 'favorite';
-    $entry->sortorder = 0;
-    $DB->insert_record('block_custom_course_menu_etc', $entry);
+    // A "favorite" record should not exist already, but check anyway.
+    $params["fav"] = 1;
+    $params["item"] = 'favorite';
+    if (!$newentry = $DB->get_record('block_custom_course_menu_etc', $params)) {
+        // Add "favorite" record.
+        $entry->item = 'favorite';
+        $entry->sortorder = 0;
+        $DB->insert_record('block_custom_course_menu_etc', $entry);
+    }
 }
 echo json_encode(array(true));

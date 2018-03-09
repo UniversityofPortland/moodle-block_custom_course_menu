@@ -56,6 +56,7 @@
             sesskey: sessionid,
             ids: ids,
             sortorder: sortorder.join(","),
+            datetime: Date.now(),
         };
 
         return $.ajax({
@@ -157,6 +158,7 @@
         var params = {
             editing: editing ? 1 : 0,
             sesskey: sessionid,
+            datetime: Date.now(),
         };
         $.ajax({
             url: interfaceUrl,
@@ -191,6 +193,7 @@
         var sessionid = M.cfg.sesskey;
         var params = {
             sesskey: sessionid,
+            datetime: Date.now(),
         };
 
         $.ajax({
