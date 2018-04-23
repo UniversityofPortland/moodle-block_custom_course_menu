@@ -15,15 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * CustomCourseMenu Block Helper - Observer
+ *
  * @package    block_custom_course_menu
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace block_custom_course_menu;
-
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * observers class.
+ *
+ * @package    block_custom_course_menu
+ * @copyright  2015 onwards University of Portland (www.up.edu)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class observers {
     /**
      * Event handler to clean up block entries on user deletes
@@ -47,6 +54,11 @@ class observers {
         global $DB;
         $DB->delete_records('block_custom_course_menu_etc', array(
             'item' => 'course',
+            'itemid' => $event->courseid,
+        ));
+
+        $DB->delete_records('block_custom_course_menu_etc', array(
+            'item' => 'favorite',
             'itemid' => $event->courseid,
         ));
     }

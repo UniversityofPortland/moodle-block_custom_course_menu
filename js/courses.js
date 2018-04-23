@@ -20,16 +20,17 @@
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-(function( factory ) {
-    if ( typeof define === "function" && define.amd ) {
+(function(factory) {
+    if (typeof define === "function" && define.amd) {
         require.config({
             waitSeconds: 30
         });
-        require(["jquery", "jqueryui"], factory );
+        require(["jquery", "jqueryui"], factory);
     } else {
-        factory( jQuery );
+        /* eslint-env jquery */
+        factory(jQuery);
     }
-}(function( $ ) {
+}(function($) {
 
     var interfaceUrl = $('#custom_course_menu_interface').attr('href');
     var $container = $('#custom_course_menu_dynamic');
@@ -43,16 +44,19 @@
         var sessionid = M.cfg.sesskey;
 
         $ul.children().each(function(index, elem) {
-            var href = $(elem).find('.item_visibility').attr('href');
+            var href = $(elem).find('.item_tool').attr('href');
             ids.push(regex.exec(href)[1]);
             sortorder.push(index);
         });
+
+        type = type == 'course' && $ul.find('.favorite_courses').length ? 'favorite' : type;
 
         var params = {
             type: type,
             sesskey: sessionid,
             ids: ids,
             sortorder: sortorder.join(","),
+            datetime: Date.now(),
         };
 
         return $.ajax({
@@ -78,17 +82,21 @@
         var $this = $(this);
         var $list = $this.siblings('.custom_course_menu_list');
         var collapsed = $this.hasClass('minus');
+        var toAdd = "";
+        var toRemove = "";
+        var listAdd = "";
+        var listRemove = "";
 
         if (collapsed) {
-            var toAdd = 'plus';
-            var toRemove = 'minus';
-            var listAdd = 'collapsed';
-            var listRemove = 'not_collapsed';
+            toAdd = 'plus';
+            toRemove = 'minus';
+            listAdd = 'collapsed';
+            listRemove = 'not_collapsed';
         } else {
-            var toAdd = 'minus';
-            var toRemove = 'plus';
-            var listAdd = 'not_collapsed';
-            var listRemove = 'collapsed';
+            toAdd = 'minus';
+            toRemove = 'plus';
+            listAdd = 'not_collapsed';
+            listRemove = 'collapsed';
         }
 
         $this.removeClass(toRemove).addClass(toAdd);
@@ -114,13 +122,15 @@
         var $parent = $this.parent();
         var $list = $this.siblings('.custom_course_menu_list');
         var hidden = $this.hasClass('inconspicuous');
+        var toAdd = "";
+        var toRemove = "";
 
         if (hidden) {
-            var toAdd = 'visible';
-            var toRemove = 'inconspicuous';
+            toAdd = 'visible';
+            toRemove = 'inconspicuous';
         } else {
-            var toAdd = 'inconspicuous';
-            var toRemove = 'visible';
+            toAdd = 'inconspicuous';
+            toRemove = 'visible';
         }
 
         $this.removeClass(toRemove).addClass(toAdd);
@@ -148,6 +158,7 @@
         var params = {
             editing: editing ? 1 : 0,
             sesskey: sessionid,
+            datetime: Date.now(),
         };
         $.ajax({
             url: interfaceUrl,
@@ -182,6 +193,7 @@
         var sessionid = M.cfg.sesskey;
         var params = {
             sesskey: sessionid,
+            datetime: Date.now(),
         };
 
         $.ajax({
@@ -196,16 +208,19 @@
     };
 
     $('#custom_course_menu_interface').click(function() {
-        $container.html($('<span/>').addClass('interface').text('Loading...'));
+        var loading = M.util.get_string('loading', 'block_custom_course_menu');
+        $container.html($('<span/>').addClass('interface').text(loading));
         createInterface(!$container.hasClass('editing'));
         return false;
     });
 
     $('#custom_course_menu_interface').mouseover(function() {
         if ($container.hasClass('editing')) {
-            $(this).prepend("<span id='overtext'>Finish Editing </span>");
+            var editingon = M.util.get_string('editingon', 'block_custom_course_menu');
+            $(this).prepend("<span id='overtext'>" + editingon + "</span>");
         } else {
-            $(this).prepend("<span id='overtext'>Start Editing </span>");
+            var editingoff = M.util.get_string('editingoff', 'block_custom_course_menu');
+            $(this).prepend("<span id='overtext'>" + editingoff + "</span>");
         }
         return false;
     });

@@ -1,152 +1,162 @@
 .block_custom_course_menu #custom_course_menu_interface {
-  float: right;
-  margin: -12px -4px;
+    float: right;
+    margin: -10px 5px;
+    text-decoration: none;
 }
-
 .block_custom_course_menu ul.custom_course_menu_category_list {
-  padding-left: 0px;
-  margin: 0;
-  list-style: none;
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
 }
-
 .block_custom_course_menu input[type='text'] {
-  width: 80%;
-  max-width: 250px;
+    width: 80%;
+    max-width: 250px;
 }
-
 .handle {
-  cursor: move;
+    cursor: move;
 }
-
 .excluded_courses {
-  cursor: default !important;
+    cursor: default;
 }
-
 .block_custom_course_menu ul.course-sortable .placeholder {
-  border: 1px dashed #cdcdcd;
-  height: 1.3em;
+    border: 1px dashed #cdcdcd;
+    height: 1.3em;
 }
-
 .block_custom_course_menu ul.custom_course_menu_category_list ul.inconspicuous {
-  display: none;
+    display: none;
 }
-
 .block_custom_course_menu ul.custom_course_menu_category_list li {
-  margin-left: 1.5em;
-  margin-bottom: 0;
-  text-indent: -1.5em;
-  list-style: none;
-  font-weight: bold;
+    margin-bottom: 0;
+    list-style: none;
+    font-weight: bold;
 }
-
-.block_custom_course_menu ul.custom_course_menu_category_list li.inconspicuous {
-  text-decoration: line-through;
+.block_custom_course_menu ul.custom_course_menu_category_list li.inconspicuous
+.courselist_course span {
+    text-decoration: line-through;
 }
-
 .block_custom_course_menu ul.custom_course_menu_category_list ul {
-  padding-left: 0px;
-  margin-left: 1em;
-  margin-top: 0;
-  margin-bottom: 0;
-  list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
 }
-
 .block_custom_course_menu ul.custom_course_menu_category_list ul li {
-  margin-left: 0.5em;
-  margin-bottom: 0;
-  text-indent: -1.5em;
-  list-style: none;
-  font-weight: normal;
+    margin-left: 0.5em;
+    margin-bottom: 0;
+    list-style: none;
+    font-weight: normal;
 }
-
 .block_custom_course_menu ul.custom_course_menu_list.inconspicuous,
 .block_custom_course_menu ul.custom_course_menu_list.collapsed {
-  display: none;
+    display: none;
 }
-
 .block_custom_course_menu #adminsearchquery {
-  max-width: 92%;
+    max-width: 92%;
 }
-
+.block_custom_course_menu #searchbutton {
+    margin: 5px;
+}
+.block_custom_course_menu .scrollable {
+    display: inline-block;
+    max-width: 98%;
+    white-space: nowrap;
+    line-height: 20px;
+    vertical-align: middle;
+    overflow: hidden;
+}
+.block_custom_course_menu span.scrollable {
+    max-width: 90%;
+}
+.block_custom_course_menu .editing .scrollable {
+    max-width: 75%;
+}
+.block_custom_course_menu .scrollable span {
+    left: 0%;
+    width: 100%;
+    position: relative;
+    -webkit-transition: left 5s, width 5s;
+    -moz-transition: left 5s, width 5s;
+    transition: left 5s, width 5s;
+    -webkit-transition-delay: 2s; /* Safari */
+    transition-delay: 2s;
+}
+.block_custom_course_menu .scrollable span:hover {
+    left: -100%;
+}
+.block_custom_course_menu .searchfield {
+    margin: 0;
+}
 /* Layout helpers
 ----------------------------------*/
 .ui-helper-hidden {
-	display: none;
+    display: none;
 }
 .ui-helper-hidden-accessible {
-	border: 0;
-	clip: rect(0 0 0 0);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	width: 1px;
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
 .ui-helper-reset {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: 0;
-	line-height: 1.3;
-	text-decoration: none;
-	font-size: 100%;
-	list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    line-height: 1.3;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
 }
 .ui-helper-clearfix:before,
 .ui-helper-clearfix:after {
-	content: "";
-	display: table;
-	border-collapse: collapse;
+    content: "";
+    display: table;
+    border-collapse: collapse;
 }
 .ui-helper-clearfix:after {
-	clear: both;
+    clear: both;
 }
 .ui-helper-clearfix {
-	min-height: 0; /* support: IE7 */
+    min-height: 0; /* support: IE7 */
 }
 .ui-helper-zfix {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	position: absolute;
-	opacity: 0;
-	filter:Alpha(Opacity=0);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    filter: alpha(Opacity=0);
 }
-
 .ui-front {
-	z-index: 100;
+    z-index: 100;
 }
-
-
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-disabled {
-	cursor: default !important;
+    cursor: default;
 }
-
-
 /* Icons
 ----------------------------------*/
-
 /* states and images */
 .ui-icon {
-	display: block;
-	text-indent: -99999px;
-	overflow: hidden;
-	background-repeat: no-repeat;
+    display: block;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
 }
-
-
 /* Misc visuals
 ----------------------------------*/
-
 /* Overlays */
 .ui-widget-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
