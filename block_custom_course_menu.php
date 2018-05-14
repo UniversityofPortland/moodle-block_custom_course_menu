@@ -122,14 +122,14 @@ class block_custom_course_menu extends block_base {
             $hidelink = array('class' => 'hidden');
         }
 
-        $editicon = '<i class="fa fa-gear"></i>';
+        $this->content->text = '<div class="editingmode editingoff">';
+        $editicon = '<i class="fa editingicon"></i>';
         $interface = new moodle_url('/blocks/custom_course_menu/interface.php');
-        $this->content->text = html_writer::link($interface,
+        $this->content->text .= html_writer::link($interface,
                                                  $editicon,
                                                  array_merge(array('id' => 'custom_course_menu_interface'), $hidelink));
         $this->content->text .= html_writer::tag('div', '', array('style' => 'clear:both;'));
-        $this->content->text .= $html;
-
+        $this->content->text .= $html . '</div>';
         return $this->content;
     }
 }
