@@ -208,6 +208,12 @@
     };
 
     $('#custom_course_menu_interface').click(function() {
+        if ($('.editingmode.editingoff').length) {
+            $('.editingmode').addClass('editingon').removeClass('editingoff');
+        } else {
+            $('.editingmode').addClass('editingoff').removeClass('editingon');
+        }
+
         var loading = M.util.get_string('loading', 'block_custom_course_menu');
         $container.html($('<span/>').addClass('interface').text(loading));
         createInterface(!$container.hasClass('editing'));
