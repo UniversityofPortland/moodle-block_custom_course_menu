@@ -216,7 +216,7 @@
         return false;
     });
 
-    $('#custom_course_menu_interface').mouseover(function() {
+    $('#custom_course_menu_interface').mouseenter(function() {
         if ($container.hasClass('editing')) {
             var editingon = M.util.get_string('editingon', 'block_custom_course_menu');
             $(this).prepend("<span id='overtext'>" + editingon + "</span>");
@@ -224,11 +224,7 @@
             var editingoff = M.util.get_string('editingoff', 'block_custom_course_menu');
             $(this).prepend("<span id='overtext'>" + editingoff + "</span>");
         }
-        return false;
-    });
-
-    $('#custom_course_menu_interface').mouseout(function() {
+    }).mouseleave(function() {
         $('#overtext').remove();
-        return false;
     });
 }));
