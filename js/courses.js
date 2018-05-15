@@ -167,8 +167,10 @@
             $container.html(html);
             if (editing) {
                 $container.addClass('editing');
+                $('.editingmode').addClass('editingon').removeClass('editingoff');
             } else {
                 $container.removeClass('editing');
+                $('.editingmode').addClass('editingoff').removeClass('editingon');
             }
 
             if (html == 'You are not enrolled in any courses.') {
@@ -208,12 +210,6 @@
     };
 
     $('#custom_course_menu_interface').click(function() {
-        if ($('.editingmode.editingoff').length) {
-            $('.editingmode').addClass('editingon').removeClass('editingoff');
-        } else {
-            $('.editingmode').addClass('editingoff').removeClass('editingon');
-        }
-
         var loading = M.util.get_string('loading', 'block_custom_course_menu');
         $container.html($('<span/>').addClass('interface').text(loading));
         createInterface(!$container.hasClass('editing'));
