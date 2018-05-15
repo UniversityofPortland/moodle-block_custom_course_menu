@@ -1,5 +1,6 @@
 .block_custom_course_menu .editingmode .editingicon {
     font-size: 1.1em;
+    font-weight: bold;
 }
 .block_custom_course_menu .editingmode.editingoff .editingicon:after {
     content: "\f204";
