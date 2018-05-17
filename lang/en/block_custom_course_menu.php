@@ -43,3 +43,6 @@ $string['lastxviewed'] = 'Last {$a} Viewed';
 $string['loading'] = 'Loading...';
 $string['nocourses'] = 'You are not enrolled in any courses.';
 $string['showsearch'] = 'Show course search';
+
+// Privacy strings.
+$string['privacy:metadata'] = 'The plugin does not store user data.';
