@@ -13,19 +13,29 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Version details
+ * Privacy Subsystem implementation for block_custom_course_menu.
  *
  * @package    block_custom_course_menu
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+namespace block_custom_course_menu\privacy;
 defined('MOODLE_INTERNAL') || die();
-
-$plugin->version = 2018051400;
-$plugin->requires  = 2017051500; // Requires Moodle 2.1.
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '2.1.5';
-$plugin->component = 'block_custom_course_menu';
+/**
+ * Privacy Subsystem for block_custom_course_menu implementing null_provider.
+ *
+ * @copyright  2015 onwards University of Portland (www.up.edu)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

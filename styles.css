@@ -1,7 +1,18 @@
+.block_custom_course_menu .editingmode .editingicon {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.block_custom_course_menu .editingmode.editingoff .editingicon:after {
+    content: "\f204";
+}
+.block_custom_course_menu .editingmode.editingon .editingicon:after {
+    content: "\f205";
+}
 .block_custom_course_menu #custom_course_menu_interface {
     float: right;
     margin: -10px 5px;
     text-decoration: none;
+    clear: both;
 }
 .block_custom_course_menu ul.custom_course_menu_category_list {
     padding-left: 0;
@@ -69,7 +80,7 @@
     max-width: 90%;
 }
 .block_custom_course_menu .editing .scrollable {
-    max-width: 75%;
+    max-width: 73%;
 }
 .block_custom_course_menu .scrollable span {
     left: 0%;
