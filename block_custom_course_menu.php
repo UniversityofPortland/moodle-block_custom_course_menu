@@ -85,8 +85,8 @@ class block_custom_course_menu extends block_base {
         $footer = "";
         if (is_siteadmin($USER->id) || has_capability('moodle/cohort:manage', context_system::instance(), $USER->id)) {
             $url = new moodle_url('/course/index.php');
-            $footer .= html_writer::link($url, html_writer::tag('div', get_string('fulllistofcourses') . '...',
-                                         array('style' => 'text-align:center;')));
+            $footer .= html_writer::tag('div', html_writer::link($url, get_string('fulllistofcourses') . '...'),
+                                        array('style' => 'text-align:center;'));
         }
 
         if (isset(get_config('block_custom_course_menu')->showsearch)) {
