@@ -75,6 +75,7 @@
     line-height: 20px;
     vertical-align: middle;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 .block_custom_course_menu span.scrollable {
     max-width: 90%;
@@ -89,8 +90,8 @@
     -webkit-transition: left 5s, width 5s;
     -moz-transition: left 5s, width 5s;
     transition: left 5s, width 5s;
-    -webkit-transition-delay: 2s; /* Safari */
-    transition-delay: 2s;
+    -webkit-transition-delay: 1.5s; /* Safari */
+    transition-delay: 1.5s;
 }
 .block_custom_course_menu .scrollable span:hover {
     left: -100%;
