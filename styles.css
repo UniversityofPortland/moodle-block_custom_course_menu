@@ -76,6 +76,9 @@
     vertical-align: middle;
     white-space: nowrap;
 }
+.block_custom_course_menu .scrollable:hover {
+    text-overflow: unset;
+}
 .block_custom_course_menu span.scrollable {
     max-width: 90%;
 }
