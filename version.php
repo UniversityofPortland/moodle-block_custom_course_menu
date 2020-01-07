@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019020700;
-$plugin->requires  = 2017051500; // Requires Moodle 2.1.
+$plugin->version = 2020010600;
+$plugin->requires  = 2018051708; // Requires Moodle 3.5.
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '2.1.6';
+$plugin->release   = '3.5';
 $plugin->component = 'block_custom_course_menu';
