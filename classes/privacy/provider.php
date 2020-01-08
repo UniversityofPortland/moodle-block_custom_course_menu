@@ -112,9 +112,13 @@ class provider implements
         $userid = $contextlist->get_user()->id;
         if(!empty($systemcontexts)){
             $entries = $DB->get_records('block_custom_course_menu', array('userid' => $userid));
-            writer::with_context($systemcontexts[\context_system::instance()->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu'=> $entries]);
+            if(!empty($entries)){
+                writer::with_context($systemcontexts[\context_system::instance()->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu'=> $entries]);
+            }
             $entries = $DB->get_records('block_custom_course_menu_etc', array('userid' => $userid));
-            writer::with_context($systemcontexts[\context_system::instance()->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu_etc:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu_etc'=> $entries]);
+            if(!empty($entries)) {
+                writer::with_context($systemcontexts[\context_system::instance()->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu_etc:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu_etc'=> $entries]);
+            }
         }
 
     }
