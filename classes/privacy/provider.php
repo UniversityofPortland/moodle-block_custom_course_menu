@@ -76,26 +76,61 @@ class provider implements
      * @return  contextlist   $contextlist  The contextlist containing the list of contexts used in this plugin.
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
-        //all site information so system
-        $contextlist =  new contextlist();
-        $contextlist->add_system_context();
+        $contextlist = new \core_privacy\local\request\contextlist();
+
+        // The block_community data is associated at the user context level, so retrieve the user's context id.
+        $sql = "SELECT ctx.id
+                  FROM {block_custom_course_menu} ccm
+                  JOIN {context} ctxt ON ctx.instanceid = ccm.userid AND ctx.contextlevel = :contextuser
+                 WHERE ccm.userid = :userid
+                UNION
+                SELECT ctx.id
+                  FROM {block_custom_course_menu_etc} ccme
+                  JOIN {context} ctxt ON ctx.instanceid = ccme.userid AND ctx.contextlevel = :contextuser2
+                 WHERE ccme.userid = :userid2
+              GROUP BY ctx.id";
+
+        $params = [
+                'contextuser'   => CONTEXT_USER,
+                'userid'        => $userid,
+                'contextuser2'   => CONTEXT_USER,
+                'userid2'        => $userid
+        ];
+
+        $contextlist->add_from_sql($sql, $params);
+
         return $contextlist;
     }
 
     /**
      * Get the list of users who have data within a context.
-     *
      * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
      */
     public static function get_users_in_context(userlist $userlist) {
-        global $DB;
         $context = $userlist->get_context();
-        if ($context instanceof \context_system) {
-            //return all user who has a backup resore task
-            $sql = 'select distinct userid from {block_custom_course_menu} union select distinct userid from {block_custom_course_menu_etc}';
-            $params = [];
-            $userlist->add_from_sql('userid', $sql, $params);
+
+        if (!$context instanceof \context_user) {
+            return;
         }
+
+        $sql = "SELECT ccm.userid as userid FROM mdl_block_custom_course_menu ccm 
+                    INNER JOIN mdl_context ctx
+                        ON ctx.instanceid=ccm.userid and ctx.contextlevel=:contextuser where ctx.id=:contextid
+                UNION
+                SELECT ccme.userid as userid from mdl_block_custom_course_menu ccme
+                    INNER JOIN mdl_context ctx
+                        ON ctx.instanceid=ccme.userid and ctx.contextlevel=:contextuser2 where ctx.id=:contextid
+                GROUP BY userid";
+
+        $params = [
+                'contextid' => $context->id,
+                'contextuser' => CONTEXT_USER,
+                'contextid2' => $context->id,
+                'contextuser2' => CONTEXT_USER,
+        ];
+        $userlist->add_from_sql('userid', $sql, $params);
+
+
     }
 
     /**
@@ -105,19 +140,19 @@ class provider implements
      */
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
-        $systemcontexts = self::validate_contextlist_contexts($contextlist, array(CONTEXT_SYSTEM));
-        if(empty($systemcontexts)){
+        $userid = $contextlist->get_user()->id;
+        $usercontexts = self::validate_contextlist_contexts($contextlist, array(CONTEXT_USER));
+        if(empty($usercontexts)){
             return;
         }
-        $userid = $contextlist->get_user()->id;
-        if(!empty($systemcontexts)){
+        if(!empty($usercontexts)){
             $entries = $DB->get_records('block_custom_course_menu', array('userid' => $userid));
             if(!empty($entries)){
-                writer::with_context($systemcontexts[\context_system::instance()->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu'=> $entries]);
+                writer::with_context($usercontexts[\context_user::instance($userid)->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu'=> $entries]);
             }
             $entries = $DB->get_records('block_custom_course_menu_etc', array('userid' => $userid));
             if(!empty($entries)) {
-                writer::with_context($systemcontexts[\context_system::instance()->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu_etc:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu_etc'=> $entries]);
+                writer::with_context($usercontexts[\context_user::instance($userid)->id])->export_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu_etc:textcontext','block_custom_course_menu')],(object)['block_custom_course_menu_etc'=> $entries]);
             }
         }
 
@@ -130,10 +165,12 @@ class provider implements
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
-        if($context instanceof \context_system){
-            $DB->delete_records('block_custom_course_menu');
-            $DB->delete_records('block_custom_course_menu_etc');
+        if(!$context instanceof \context_user) {
+            return;
         }
+        $userid = $context->instanceid;
+        $DB->delete_records('block_custom_course_menu',array('userid' => $userid));
+        $DB->delete_records('block_custom_course_menu_etc', array('userid' => $userid));
     }
 
     /**
@@ -142,18 +179,18 @@ class provider implements
      * @param   approved_contextlist $contextlist The approved contexts and user information to delete information for.
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
-        if (empty($contextlist->count())) {
+        global $CFG;
+        require_once($CFG->dirroot.'/blocks/custom_course_menu/handler.php');
+        $contexts = $contextlist->get_contexts();
+        if (count($contexts) == 0) {
             return;
         }
-
-        $user = $contextlist->get_user();
-        foreach ($contextlist->get_contexts() as $context) {
-
-            if (!$context instanceof \context_system) {
-                continue;
-            }
-            \custom_course_menu_handler::user_deleted($user);
+        $context = reset($contexts);
+        if ($context->contextlevel !== CONTEXT_USER) {
+            return;
         }
+        $user = $contextlist->get_user();
+        \custom_course_menu_handler::user_deleted($user);
     }
 
     /**
@@ -162,13 +199,18 @@ class provider implements
      * @param   approved_userlist       $userlist The approved context and user information to delete information for.
      */
     public static function delete_data_for_users(approved_userlist $userlist) {
+        global $CFG;
+        require_once($CFG->dirroot.'/blocks/custom_course_menu/handler.php');
         $context = $userlist->get_context();
-        if (!$context instanceof \context_system) {
+        if (!$context instanceof \context_user) {
             return;
         }
         $users = $userlist->get_users();
+        //only user in list if concerned by the current user context
         foreach($users as $user){
-            \custom_course_menu_handler::user_deleted($user);
+            if($context->instanceid == $user->id){
+                \custom_course_menu_handler::user_deleted($user);
+            }
         }
     }
 
