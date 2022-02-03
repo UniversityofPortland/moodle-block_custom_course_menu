@@ -22,7 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace block_custom_course_menu;
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * observers class.

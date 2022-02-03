@@ -22,7 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * block_custom_course_menu class.
@@ -54,17 +53,17 @@ class block_custom_course_menu extends block_base {
      * @return stdClass the content
      */
     public function get_content() {
-        global $CFG, $USER, $OUTPUT, $PAGE;
+        global $CFG, $USER, $OUTPUT;
 
         if ($this->content !== null) {
             return $this->content;
         }
 
-        $PAGE->requires->string_for_js('loading', 'block_custom_course_menu');
-        $PAGE->requires->string_for_js('editingon', 'block_custom_course_menu');
-        $PAGE->requires->string_for_js('editingoff', 'block_custom_course_menu');
-        $PAGE->requires->jquery();
-        $PAGE->requires->js('/blocks/custom_course_menu/js/courses.js');
+        $this->page->requires->string_for_js('loading', 'block_custom_course_menu');
+        $this->page->requires->string_for_js('editingon', 'block_custom_course_menu');
+        $this->page->requires->string_for_js('editingoff', 'block_custom_course_menu');
+        $this->page->requires->jquery();
+        $this->page->requires->js('/blocks/custom_course_menu/js/courses.js');
 
         $this->content = new stdClass;
         $this->content->footer = '&nbsp;';
