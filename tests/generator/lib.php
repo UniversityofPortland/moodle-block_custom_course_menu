@@ -24,13 +24,16 @@
  * @author Céline Pervès <cperves@unistra.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-
 class block_custom_course_menu_generator extends testing_block_generator {
-
-    public function set_course_visible($userid,$coursecatid, $iscourse, $isvisible){
+    /**
+     * Set course or category visiblity for the specified user.
+     *
+     * @param int $userid user id number
+     * @param int $coursecatid course or category id number
+     * @param boolean $iscourse true if $coursecatid is a course id, false if it is a category id
+     * @param boolean $isvisible true if the course or category is visible, false otherwise
+     */
+    public function set_course_visible($userid, $coursecatid, $iscourse, $isvisible) {
         global $DB;
         if ($iscourse) {
             $itemid = $coursecatid;
@@ -57,7 +60,14 @@ class block_custom_course_menu_generator extends testing_block_generator {
         }
     }
 
-    public function set_collapsed_category($userid,$categoryid,$collapsed){
+    /**
+     * Set category collapsed status for the specified user.
+     *
+     * @param int $userid user id number
+     * @param int $categoryid category id number
+     * @param boolean $collapsed true if the category is collapsed, false otherwise
+     */
+    public function set_collapsed_category($userid, $categoryid, $collapsed) {
         global $DB;
         $params = array(
                 'userid' => $userid,
@@ -67,14 +77,14 @@ class block_custom_course_menu_generator extends testing_block_generator {
         $entry = $DB->get_record('block_custom_course_menu', $params);
 
         if ($entry) {
-            $entry->collapsed =intval($collapsed);
+            $entry->collapsed = intval($collapsed);
 
             $DB->update_record('block_custom_course_menu', $entry);
         } else {
             $entry = new stdClass;
             $entry->userid = $userid;
             $entry->categoryid = $categoryid;
-            $entry->collapsed =intval($collapsed);
+            $entry->collapsed = intval($collapsed);
 
             $DB->insert_record('block_custom_course_menu', $entry);
         }

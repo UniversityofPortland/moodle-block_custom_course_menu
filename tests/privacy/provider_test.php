@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_custom_course_menu\privacy;
+
+use core_privacy\tests\provider_testcase;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\transform;
+use core_privacy\local\request\writer;
+use block_custom_course_menu\privacy\provider;
+
 /**
  * Unit tests for the block_custom_course_menu implementation of the privacy API.
  *
@@ -24,38 +33,33 @@
  * @author  Céline Pervès <cperves@unistra.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider_test extends \core_privacy\tests\provider_testcase {
 
-defined('MOODLE_INTERNAL') || die();
-
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\approved_userlist;
-use \block_custom_course_menu\privacy\provider;
-
-class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\provider_testcase {
-
-    public function setUp() {
+    /**
+     * Basic setup for these tests.
+     */
+    public function setUp(): void {
         $this->resetAfterTest(true);
     }
 
     /**
-     * Tets get_contexts_for_userid function.
+     * Test get_contexts_for_userid function.
      * Function that get the list of contexts that contain user information for the specified user.
      * @throws coding_exception
      */
-    public function test_get_contexts_for_userid(){
+    public function test_get_contexts_for_userid() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
-        //create block
+        // Create block.
         $this->create_block_instance();
-        //check datas
-        // at this point no user contexts registered
+        // Create datas.
+        // At this point no user contexts registered.
         $contextlist = provider::get_contexts_for_userid($user->id);
         $this->assertCount(0, $contextlist);
-        //register user as student for courses
+        // Register user as student for courses.
         $this->create_coursecat_and_enrol_set_block($user);
         $contextlist = provider::get_contexts_for_userid($user->id);
         $this->assertCount(1, $contextlist);
@@ -66,40 +70,44 @@ class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\prov
      * Function that get the list of users who have data within a context.
      * @throws coding_exception
      */
-    public function test_export_user_data(){
+    public function test_export_user_data() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
-        //create block
+        // Create block.
         $this->create_block_instance();
         $this->export_context_data_for_user($user->id, $usercontext, 'block_custom_course_menu');
         $writer = \core_privacy\local\request\writer::with_context($usercontext);
         $this->assertFalse($writer->has_any_data());
 
-        list($category1, $category2, $category3, $course1,$course2,$course3) = $this->create_coursecat_and_enrol_set_block($user);
+        list($category1, $category2, $category3, $course1, $course2, $course3) = $this->create_coursecat_and_enrol_set_block($user);
         $this->export_context_data_for_user($user->id, $usercontext, 'block_custom_course_menu');
         $writer = \core_privacy\local\request\writer::with_context($usercontext);
         $this->assertTrue($writer->has_any_data());
 
-        $data = $writer->get_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu:textcontext','block_custom_course_menu')]);
+        $data = $writer->get_data([get_string('pluginname', 'block_custom_course_menu'),
+                                   get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu:textcontext',
+                                              'block_custom_course_menu')]);
         $this->assertInstanceOf('stdClass', $data);
         $this->assertTrue(property_exists($data, 'block_custom_course_menu'));
-        foreach($data->block_custom_course_menu as $record){
+        foreach ($data->block_custom_course_menu as $record) {
             $this->assertEquals($user->id, $record->userid);
             $this->assertEquals($category3->id, $record->categoryid);
             $this->assertEquals("1", $record->collapsed);
         }
 
-        $data = $writer->get_data([get_string('pluginname', 'block_custom_course_menu'),get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu_etc:textcontext','block_custom_course_menu')]);
+        $data = $writer->get_data([get_string('pluginname', 'block_custom_course_menu'),
+                                   get_string('privacy:metadata:block_custom_course_menu:block_custom_course_menu_etc:textcontext',
+                                              'block_custom_course_menu')]);
         $this->assertInstanceOf('stdClass', $data);
         $this->assertTrue(property_exists($data, 'block_custom_course_menu_etc'));
-        foreach($data->block_custom_course_menu_etc as $record){
+        foreach ($data->block_custom_course_menu_etc as $record) {
             $this->assertEquals($user->id, $record->userid);
             $this->assertTrue($record->itemid == $category1->id || $record->itemid == $course1->id);
         }
-}
+    }
 
     /**
      * Test delete_data_for_all_users_in_context function.
@@ -112,7 +120,7 @@ class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\prov
         $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
-        //create block
+        // Create block.
         $this->create_block_instance();
         // Delete the context.
         provider::delete_data_for_all_users_in_context($usercontext);
@@ -132,7 +140,7 @@ class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\prov
         $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
-        //create block
+        // Create block.
         $this->create_block_instance();
         // Delete the context.
         $approvedcontextlist = new \core_privacy\tests\request\approved_contextlist(
@@ -156,7 +164,7 @@ class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\prov
         $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
-        //create block
+        // Create block.
         $this->create_block_instance();
         // Delete the context.
         $approveduserlist = new approved_userlist($usercontext, 'block_custom_course_menu', [$user->id]);
@@ -167,7 +175,6 @@ class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\prov
 
     /**
      * Create a block instance
-     * @param $SITE
      * @throws coding_exception
      */
     private function create_block_instance() {
@@ -193,10 +200,9 @@ class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\prov
         $this->getDataGenerator()->enrol_user($user->id, $course2->id, 'student');
         $this->getDataGenerator()->enrol_user($user->id, $course3->id, 'student');
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_custom_course_menu');
-        $blockgenerator->set_course_visible($user->id,$category1->id, false, false);
-        $blockgenerator->set_course_visible($user->id,$course1->id, true, true);
-        $blockgenerator->set_collapsed_category($user->id,$category3->id,true);
-        return array($category1, $category2, $category3, $course1,$course2,$course3);
+        $blockgenerator->set_course_visible($user->id, $category1->id, false, false);
+        $blockgenerator->set_course_visible($user->id, $course1->id, true, true);
+        $blockgenerator->set_collapsed_category($user->id, $category3->id, true);
+        return array($category1, $category2, $category3, $course1, $course2, $course3);
     }
-
 }
