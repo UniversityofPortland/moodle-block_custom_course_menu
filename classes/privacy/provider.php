@@ -79,12 +79,12 @@ class provider implements
         // The block_community data is associated at the user context level, so retrieve the user's context id.
         $sql = "SELECT ctx.id
                   FROM {block_custom_course_menu} ccm
-                  JOIN {context} ctxt ON ctx.instanceid = ccm.userid AND ctx.contextlevel = :contextuser
+                  JOIN {context} ctx ON ctx.instanceid = ccm.userid AND ctx.contextlevel = :contextuser
                  WHERE ccm.userid = :userid
                 UNION
                 SELECT ctx.id
                   FROM {block_custom_course_menu_etc} ccme
-                  JOIN {context} ctxt ON ctx.instanceid = ccme.userid AND ctx.contextlevel = :contextuser2
+                  JOIN {context} ctx ON ctx.instanceid = ccme.userid AND ctx.contextlevel = :contextuser2
                  WHERE ccme.userid = :userid2
               GROUP BY ctx.id";
 

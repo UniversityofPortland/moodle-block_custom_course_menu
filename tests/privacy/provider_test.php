@@ -14,10 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\approved_userlist;
-use \block_custom_course_menu\privacy\provider;
+namespace block_custom_course_menu\privacy;
+
+use core_privacy\tests\provider_testcase;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\transform;
+use core_privacy\local\request\writer;
+use block_custom_course_menu\privacy\provider;
 
 /**
  * Unit tests for the block_custom_course_menu implementation of the privacy API.
@@ -29,9 +33,12 @@ use \block_custom_course_menu\privacy\provider;
  * @author  Céline Pervès <cperves@unistra.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class block_custom_course_menu_privacy_testcase extends \core_privacy\tests\provider_testcase {
+class provider_test extends \core_privacy\tests\provider_testcase {
 
-    public function setUp() {
+    /**
+     * Basic setup for these tests.
+     */
+    public function setUp(): void {
         $this->resetAfterTest(true);
     }
 
