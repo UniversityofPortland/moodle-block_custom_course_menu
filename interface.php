@@ -357,14 +357,14 @@ function get_last_viewed_courses(int $userid = null, int $limit = 0) {
     $coursefields = 'c.' . join(',', $basefields);
     $visible = '';
     if (!has_capability('moodle/course:view', context_system::instance())) {
-        $visible = 'AND ul.visible = 1';
+        $visible = 'WHERE c.visible = 1';
     }
     $sql = "SELECT $coursefields
               FROM {course} c
               JOIN {user_lastaccess} ul
                    ON ul.courseid = c.id
                   AND ul.userid = :userid
-                  $visible
+          $visible
           ORDER BY timeaccess DESC";
 
     $params = ['userid' => $userid];
