@@ -300,43 +300,16 @@ function sort_my_categories($categories) {
  */
 function get_last_viewed() {
     global $CFG, $DB, $USER;
+    require_once($CFG->dirroot.'/course/lib.php');
     $categorymeta = get_meta_for('category');
     $lva = get_config('block_custom_course_menu')->lastviewedamount;
-    if ($CFG->version < 2014051200) { // Moodle < 2.7.
-        $sql = "SELECT *
-                  FROM {log} a
-            INNER JOIN (SELECT c.*, course, MAX(time) as time
-                          FROM {log} l
-                          JOIN {course} c
-                            ON c.id = l.course
-                         WHERE userid = '$USER->id'
-                           AND course != 1
-                           AND module = 'course'
-                      GROUP BY course) b
-                    ON a.course = b.course
-                   AND a.time = b.time
-              GROUP BY a.course
-              ORDER BY b.time DESC
-              LIMIT $lva";
-    } else { // Moodle 2.7+.
-        $sql = "SELECT a.courseid, max(a.timecreated) as date, a.userid
-                  FROM (SELECT *
-                          FROM {logstore_standard_log}
-				         WHERE courseid !=0
-                           AND courseid !=1) AS a
-                 WHERE a.userid = '$USER->id'
-                   AND a.origin != 'cli'
-                GROUP BY a.userid, a.courseid
-                ORDER BY date DESC
-                LIMIT $lva";
-    }
 
-    $latestcourses = $DB->get_records_sql($sql);
+    $courses = course_get_recent_courses($USER->id, $lva);
 
     $categories = array();
     $order = 1;
-    foreach ($latestcourses as $latest) {
-        if ($course = $DB->get_record('course', array('id' => $latest->courseid))) {
+    foreach ($courses as $course) {
+        if ($course = $DB->get_record('course', array('id' => $course->id))) {
             if (!isset($categories[-2])) {
                 $category = new stdClass();
                 $category->name = get_string('lastxviewed', 'block_custom_course_menu', $lva);
