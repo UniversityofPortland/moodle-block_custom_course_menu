@@ -222,7 +222,7 @@ echo $html;
  * @return array
  */
 function get_category_tree() {
-    global $DB;
+    global $DB, $USER;
 
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
@@ -313,7 +313,7 @@ function get_last_viewed() {
     $categories = array();
     $order = 1;
     foreach ($courses as $course) {
-        if ($course = $DB->get_record('course', array('id' => $course->id))) {
+        if ($course->visible == 1 || has_capability('moodle/course:viewhiddencourses', context_course::instance($course->id))) {
             if (!isset($categories[-2])) {
                 $category = new stdClass();
                 $category->name = get_string('lastxviewed', 'block_custom_course_menu', $lva);
@@ -355,16 +355,12 @@ function get_last_viewed_courses(int $userid = null, int $limit = 0) {
         'shortname', 'fullname', 'timeaccess', 'visible'];
 
     $coursefields = 'c.' . join(',', $basefields);
-    $visible = '';
-    if (!has_capability('moodle/course:view', context_system::instance())) {
-        $visible = 'WHERE c.visible = 1';
-    }
+
     $sql = "SELECT $coursefields
               FROM {course} c
               JOIN {user_lastaccess} ul
                    ON ul.courseid = c.id
                   AND ul.userid = :userid
-          $visible
           ORDER BY timeaccess DESC";
 
     $params = ['userid' => $userid];
