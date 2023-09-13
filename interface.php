@@ -227,7 +227,11 @@ function get_category_tree() {
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
 
-    $courses = enrol_get_my_courses();
+    if (has_capability('moodle/course:view', context_system::instance())) {
+        $courses = enrol_get_all_users_courses($USER->id, true);
+    } else {
+        $courses = enrol_get_my_courses();
+    }
 
     $categories = array();
     foreach ($courses as $course) {
@@ -304,7 +308,7 @@ function get_last_viewed() {
     $categorymeta = get_meta_for('category');
     $lva = get_config('block_custom_course_menu')->lastviewedamount;
 
-    $courses = course_get_recent_courses($USER->id, $lva);
+    $courses = get_last_viewed_courses($USER->id, $lva);
 
     $categories = array();
     $order = 1;
@@ -330,6 +334,44 @@ function get_last_viewed() {
         }
     }
     return $categories;
+}
+
+/**
+ * Returns a list of the most recently courses accessed by a user
+ *
+ * @param int $userid User id from which the courses will be obtained
+ * @param int $limit Restrict result set to this amount
+ * @return array
+ */
+function get_last_viewed_courses(int $userid = null, int $limit = 0) {
+    global $CFG, $USER, $DB;
+
+    if (empty($userid)) {
+        $userid = $USER->id;
+    }
+
+    $basefields = [
+        'id', 'idnumber', 'category',
+        'shortname', 'fullname', 'timeaccess', 'visible'];
+
+    $coursefields = 'c.' . join(',', $basefields);
+    $visible = '';
+    if (!has_capability('moodle/course:view', context_system::instance())) {
+        $visible = 'AND ul.visible = 1';
+    }
+    $sql = "SELECT $coursefields
+              FROM {course} c
+              JOIN {user_lastaccess} ul
+                   ON ul.courseid = c.id
+                  AND ul.userid = :userid
+                  $visible
+          ORDER BY timeaccess DESC";
+
+    $params = ['userid' => $userid];
+
+    $recentcourses = $DB->get_records_sql($sql, $params, 0, $limit);
+
+    return $recentcourses;
 }
 
 /**
