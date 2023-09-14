@@ -53,7 +53,7 @@ class block_custom_course_menu extends block_base {
      * @return stdClass the content
      */
     public function get_content() {
-        global $CFG, $USER, $OUTPUT;
+        global $CFG, $USER;
 
         if ($this->content !== null) {
             return $this->content;
@@ -67,14 +67,6 @@ class block_custom_course_menu extends block_base {
 
         $this->content = new stdClass;
         $this->content->footer = '&nbsp;';
-
-        $adminseesall = true;
-
-        if (isset($CFG->block_course_list_adminview)) {
-            if ($CFG->block_course_list_adminview == 'own') {
-                $adminseesall = false;
-            }
-        }
 
         $html = '<div id="custom_course_menu_application">'
               . '<div id="custom_course_menu_dynamic">'
@@ -115,7 +107,9 @@ class block_custom_course_menu extends block_base {
 
         $this->content->footer = $footer;
 
+        // Takes into account hidden courses and permissions to get viewable count.
         $courses = enrol_get_my_courses();
+
         $hidelink = array();
         if (empty($courses) && empty($CFG->block_custom_course_menu_enablelastviewed)) {
             $hidelink = array('class' => 'hidden');

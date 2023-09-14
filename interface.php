@@ -222,36 +222,38 @@ echo $html;
  * @return array
  */
 function get_category_tree() {
-    global $DB;
+    global $DB, $USER;
 
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
 
-    $courses = enrol_get_my_courses();
+    $courses = enrol_get_all_users_courses($USER->id, true);
 
     $categories = array();
     foreach ($courses as $course) {
-        if (!isset($categories[$course->category])) {
-            $params = array('id' => $course->category);
-            $category = $DB->get_record('course_categories', $params);
-            $category->courses = array();
+        if ($course->visible == 1 || has_capability('moodle/course:viewhiddencourses', context_course::instance($course->id))) {
+            if (!isset($categories[$course->category])) {
+                $params = array('id' => $course->category);
+                $category = $DB->get_record('course_categories', $params);
+                $category->courses = array();
 
-            if (isset($categorymeta[$category->id])) {
-                $category->meta = $categorymeta[$category->id];
-            } else {
-                $category->meta = (object) array('hide' => 0);
+                if (isset($categorymeta[$category->id])) {
+                    $category->meta = $categorymeta[$category->id];
+                } else {
+                    $category->meta = (object) array('hide' => 0);
+                }
+
+                $categories[$course->category] = $category;
             }
 
-            $categories[$course->category] = $category;
-        }
+            if (isset($coursemeta[$course->id])) {
+                $course->meta = $coursemeta[$course->id];
+            } else {
+                $course->meta = (object) array('hide' => 0, 'fav' => 0);
+            }
 
-        if (isset($coursemeta[$course->id])) {
-            $course->meta = $coursemeta[$course->id];
-        } else {
-            $course->meta = (object) array('hide' => 0, 'fav' => 0);
+            $categories[$course->category]->courses[$course->id] = $course;
         }
-
-        $categories[$course->category]->courses[$course->id] = $course;
     }
 
     return $categories;
@@ -300,43 +302,16 @@ function sort_my_categories($categories) {
  */
 function get_last_viewed() {
     global $CFG, $DB, $USER;
+    require_once($CFG->dirroot.'/course/lib.php');
     $categorymeta = get_meta_for('category');
     $lva = get_config('block_custom_course_menu')->lastviewedamount;
-    if ($CFG->version < 2014051200) { // Moodle < 2.7.
-        $sql = "SELECT *
-                  FROM {log} a
-            INNER JOIN (SELECT c.*, course, MAX(time) as time
-                          FROM {log} l
-                          JOIN {course} c
-                            ON c.id = l.course
-                         WHERE userid = '$USER->id'
-                           AND course != 1
-                           AND module = 'course'
-                      GROUP BY course) b
-                    ON a.course = b.course
-                   AND a.time = b.time
-              GROUP BY a.course
-              ORDER BY b.time DESC
-              LIMIT $lva";
-    } else { // Moodle 2.7+.
-        $sql = "SELECT a.courseid, max(a.timecreated) as date, a.userid
-                  FROM (SELECT *
-                          FROM {logstore_standard_log}
-				         WHERE courseid !=0
-                           AND courseid !=1) AS a
-                 WHERE a.userid = '$USER->id'
-                   AND a.origin != 'cli'
-                GROUP BY a.userid, a.courseid
-                ORDER BY date DESC
-                LIMIT $lva";
-    }
 
-    $latestcourses = $DB->get_records_sql($sql);
+    $courses = get_last_viewed_courses($USER->id, $lva);
 
     $categories = array();
     $order = 1;
-    foreach ($latestcourses as $latest) {
-        if ($course = $DB->get_record('course', array('id' => $latest->courseid))) {
+    foreach ($courses as $course) {
+        if ($course->visible == 1 || has_capability('moodle/course:viewhiddencourses', context_course::instance($course->id))) {
             if (!isset($categories[-2])) {
                 $category = new stdClass();
                 $category->name = get_string('lastxviewed', 'block_custom_course_menu', $lva);
@@ -357,6 +332,40 @@ function get_last_viewed() {
         }
     }
     return $categories;
+}
+
+/**
+ * Returns a list of the most recently courses accessed by a user
+ *
+ * @param int $userid User id from which the courses will be obtained
+ * @param int $limit Restrict result set to this amount
+ * @return array
+ */
+function get_last_viewed_courses(int $userid = null, int $limit = 0) {
+    global $CFG, $USER, $DB;
+
+    if (empty($userid)) {
+        $userid = $USER->id;
+    }
+
+    $basefields = [
+        'id', 'idnumber', 'category',
+        'shortname', 'fullname', 'timeaccess', 'visible'];
+
+    $coursefields = 'c.' . join(',', $basefields);
+
+    $sql = "SELECT $coursefields
+              FROM {course} c
+              JOIN {user_lastaccess} ul
+                   ON ul.courseid = c.id
+                  AND ul.userid = :userid
+          ORDER BY timeaccess DESC";
+
+    $params = ['userid' => $userid];
+
+    $recentcourses = $DB->get_records_sql($sql, $params, 0, $limit);
+
+    return $recentcourses;
 }
 
 /**

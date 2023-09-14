@@ -30,7 +30,8 @@ use block_custom_course_menu\privacy\provider;
  * @category   test
  * @copyright  2015 onwards University of Portland (www.up.edu)
  * @copyright  2020 unistra  {@link http://unistra.fr}
- * @author  Céline Pervès <cperves@unistra.fr>
+ * @author     Céline Pervès <cperves@unistra.fr>
+ * @covers     \block_custom_course_menu\provider
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider_test extends \core_privacy\tests\provider_testcase {
@@ -45,14 +46,12 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test get_contexts_for_userid function.
      * Function that get the list of contexts that contain user information for the specified user.
-     * @throws coding_exception
      */
     public function test_get_contexts_for_userid() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $admin = get_admin();
         $this->setUser($user);
-        $usercontext = \context_user::instance($user->id);
+
         // Create block.
         $this->create_block_instance();
         // Create datas.
@@ -68,12 +67,10 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test expert_user_data function.
      * Function that get the list of users who have data within a context.
-     * @throws coding_exception
      */
     public function test_export_user_data() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
         // Create block.
@@ -112,12 +109,10 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test delete_data_for_all_users_in_context function.
      * Function that delete all data for all users in the specified context
-     * @throws coding_exception
      */
     public function test_delete_data_for_all_users_in_context() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
         // Create block.
@@ -131,13 +126,10 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test delete_data_for_user function.
      * Function that delete all user data for the specified user, in the specified contexts.
-     * @throws coding_exception
-     * @throws dml_exception
      */
     public function test_delete_data_for_user() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
         // Create block.
@@ -156,12 +148,10 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test delete_data_for_users function.
      * Function that Delete multiple users within a single context.
-     * @throws coding_exception
      */
     public function test_delete_data_for_users() {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $admin = get_admin();
         $this->setUser($user);
         $usercontext = \context_user::instance($user->id);
         // Create block.
@@ -175,7 +165,6 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
     /**
      * Create a block instance
-     * @throws coding_exception
      */
     private function create_block_instance() {
         global $SITE;
