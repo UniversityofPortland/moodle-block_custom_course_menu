@@ -107,11 +107,8 @@ class block_custom_course_menu extends block_base {
 
         $this->content->footer = $footer;
 
-        if (has_capability('moodle/course:view', context_system::instance())) {
-            $courses = enrol_get_all_users_courses($USER->id, true);
-        } else {
-            $courses = enrol_get_my_courses();
-        }
+        // Takes into account hidden courses and permissions to get viewable count.
+        $courses = enrol_get_my_courses();
 
         $hidelink = array();
         if (empty($courses) && empty($CFG->block_custom_course_menu_enablelastviewed)) {

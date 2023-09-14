@@ -227,35 +227,33 @@ function get_category_tree() {
     $categorymeta = get_meta_for('category');
     $coursemeta = get_meta_for('course');
 
-    if (has_capability('moodle/course:view', context_system::instance())) {
-        $courses = enrol_get_all_users_courses($USER->id, true);
-    } else {
-        $courses = enrol_get_my_courses();
-    }
+    $courses = enrol_get_all_users_courses($USER->id, true);
 
     $categories = array();
     foreach ($courses as $course) {
-        if (!isset($categories[$course->category])) {
-            $params = array('id' => $course->category);
-            $category = $DB->get_record('course_categories', $params);
-            $category->courses = array();
+        if ($course->visible == 1 || has_capability('moodle/course:viewhiddencourses', context_course::instance($course->id))) {
+            if (!isset($categories[$course->category])) {
+                $params = array('id' => $course->category);
+                $category = $DB->get_record('course_categories', $params);
+                $category->courses = array();
 
-            if (isset($categorymeta[$category->id])) {
-                $category->meta = $categorymeta[$category->id];
-            } else {
-                $category->meta = (object) array('hide' => 0);
+                if (isset($categorymeta[$category->id])) {
+                    $category->meta = $categorymeta[$category->id];
+                } else {
+                    $category->meta = (object) array('hide' => 0);
+                }
+
+                $categories[$course->category] = $category;
             }
 
-            $categories[$course->category] = $category;
-        }
+            if (isset($coursemeta[$course->id])) {
+                $course->meta = $coursemeta[$course->id];
+            } else {
+                $course->meta = (object) array('hide' => 0, 'fav' => 0);
+            }
 
-        if (isset($coursemeta[$course->id])) {
-            $course->meta = $coursemeta[$course->id];
-        } else {
-            $course->meta = (object) array('hide' => 0, 'fav' => 0);
+            $categories[$course->category]->courses[$course->id] = $course;
         }
-
-        $categories[$course->category]->courses[$course->id] = $course;
     }
 
     return $categories;
